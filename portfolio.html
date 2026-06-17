@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sema — сайты и веб-приложения на заказ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#1B3329;
+    --green-deep:#142823;
+    --cream:#F2EDE3;
+    --cream-deep:#E6E0D2;
+    --ink:#14191A;
+    --ink-soft:#3C4540;
+    --on-green:#EBE3D3;
+    --on-green-soft:#A8B0A6;
+    --ochre:#E8B928;
+    --rule-cream:#14191A14;
+    --rule-green:#EBE3D31F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Onest",sans-serif;
+    font-size:16px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .display{font-family:"Unbounded",sans-serif;font-weight:700;letter-spacing:-0.025em;line-height:0.95}
+  .mono{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:0 48px}
+  @media (max-width:760px){.wrap{padding:0 22px}}
+
+  /* ---- NAV ---- */
+  nav{
+    position:sticky;top:0;z-index:60;
+    background:var(--green);color:var(--on-green);
+    border-bottom:1px solid var(--rule-green);
+  }
+  nav .inner{display:flex;justify-content:space-between;align-items:center;padding:18px 0;gap:24px}
+  nav .brand{font-family:"Unbounded",sans-serif;font-weight:700;letter-spacing:-0.01em;font-size:16px;color:var(--on-green)}
+  nav .brand span{color:var(--ochre)}
+  nav .links{display:flex;gap:24px}
+  nav .links a{color:var(--on-green-soft);text-decoration:none;font-size:13px;letter-spacing:0.04em;transition:color 180ms}
+  nav .links a:hover{color:var(--on-green)}
+  @media (max-width:680px){nav .links{display:none}}
+
+  /* ---- BLOCKS ---- */
+  .block{padding: clamp(96px, 14vh, 160px) 0;position:relative}
+  .block--green{background:var(--green);color:var(--on-green)}
+  .block--cream{background:var(--cream);color:var(--ink)}
+
+  /* ---- HERO ---- */
+  .hero{padding: clamp(80px, 8vh, 110px) 0 clamp(60px, 6vh, 90px);min-height: calc(100vh - 60px);display:flex;flex-direction:column;justify-content:space-between}
+  .hero-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;align-items:flex-start}
+  .hero-top .label{display:flex;flex-direction:column;gap:6px;color:var(--on-green-soft)}
+  .hero-top .label .v{color:var(--on-green);font-family:"Onest";font-weight:500;font-size:15px;letter-spacing:0}
+  .hero-top .label .v.live{display:flex;align-items:center;gap:8px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--ochre);box-shadow:0 0 0 0 rgba(232,185,40,0.65);animation:pulse 2.4s ease-out infinite}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(232,185,40,0.55)}
+    70%{box-shadow:0 0 0 10px rgba(232,185,40,0)}
+    100%{box-shadow:0 0 0 0 rgba(232,185,40,0)}
+  }
+
+  .manifesto{
+    margin: clamp(40px, 8vh, 80px) 0;
+    font-family:"Unbounded",sans-serif;
+    font-weight:700;
+    font-size: clamp(54px, 11vw, 160px);
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+    color:var(--on-green);
+    max-width: 13ch;
+  }
+  .manifesto .accent{color:var(--ochre)}
+  .manifesto .thin{font-weight:500}
+
+  .hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;border-top:1px solid var(--rule-green);padding-top:22px}
+  .hero-bottom .desc{max-width:46ch;color:var(--on-green-soft);font-size:15px;line-height:1.55}
+  .hero-bottom .desc strong{color:var(--on-green);font-weight:500}
+  .hero-bottom .index{color:var(--on-green-soft);text-align:right;display:flex;flex-direction:column;gap:4px}
+  .hero-bottom .index a{display:block;color:var(--on-green);text-decoration:none;font-size:13px;letter-spacing:0.04em;transition:color 180ms}
+  .hero-bottom .index a:hover{color:var(--ochre)}
+
+  /* ---- SECTION HEADER ---- */
+  .section-head{display:grid;grid-template-columns: 200px 1fr;gap:48px;margin-bottom:64px;align-items:end}
+  @media (max-width:760px){.section-head{grid-template-columns:1fr;gap:16px;margin-bottom:40px}}
+  .section-head .kicker{display:flex;flex-direction:column;gap:6px}
+  .section-head .kicker .num{font-family:"Unbounded";font-weight:700;font-size:14px;letter-spacing:-0.01em;color:var(--ochre)}
+  .section-head .title{
+    font-family:"Unbounded",sans-serif;font-weight:700;
+    font-size: clamp(38px, 5.6vw, 72px);
+    line-height: 0.96;letter-spacing:-0.03em;
+    max-width: 18ch;
+  }
+  .block--green .section-head .title{color:var(--on-green)}
+
+  /* ---- ABOUT ---- */
+  .about-body{display:grid;grid-template-columns: 200px 1fr 1fr;gap:48px}
+  @media (max-width:920px){.about-body{grid-template-columns:1fr;gap:32px}}
+  .about-body .label{color:var(--ink-soft);font-size:13px;letter-spacing:0.04em;line-height:1.7}
+  .about-body p{font-size: clamp(17px, 1.6vw, 21px);line-height:1.5;max-width:42ch}
+  .about-body p + p{margin-top:18px}
+  .about-body strong{font-weight:600}
+  .about-body .right{display:flex;flex-direction:column;gap:20px}
+  .about-quick{display:flex;flex-direction:column;gap:14px;border-left:2px solid var(--ochre);padding:6px 0 6px 18px}
+  .about-quick .row{display:flex;justify-content:space-between;gap:14px;font-size:14px;border-bottom:1px solid var(--rule-cream);padding-bottom:10px}
+  .about-quick .row:last-child{border-bottom:0;padding-bottom:0}
+  .about-quick .k{color:var(--ink-soft);letter-spacing:0.04em}
+  .about-quick .v{color:var(--ink);text-align:right;font-weight:500}
+
+  /* ---- WORK GRID ---- */
+  .work-grid{display:grid;grid-template-columns: repeat(6, 1fr);gap:24px}
+  @media (max-width:920px){.work-grid{grid-template-columns:repeat(2, 1fr);gap:18px}}
+  @media (max-width:560px){.work-grid{grid-template-columns:1fr}}
+  .card{
+    grid-column: span 3;
+    background:rgba(235,227,211,0.05);
+    border:1px solid var(--rule-green);
+    padding:36px;
+    display:flex;flex-direction:column;gap:20px;
+    min-height: 460px;
+    position:relative;overflow:hidden;
+    transition: background 260ms ease, border-color 260ms ease, transform 260ms ease;
+  }
+  .card.featured{grid-column: span 6;flex-direction:row;align-items:stretch;gap:36px;min-height:520px}
+  @media (max-width:920px){.card{grid-column:span 1;min-height:360px;padding:28px}.card.featured{grid-column:span 2;flex-direction:column}}
+  @media (max-width:560px){.card.featured{grid-column:span 1}}
+
+  .card:hover{background:rgba(235,227,211,0.08);border-color:rgba(235,227,211,0.3);transform:translateY(-2px)}
+  .card.placeholder{background:transparent;border-style:dashed;border-color:rgba(235,227,211,0.22)}
+  .card.placeholder:hover{background:transparent;transform:none}
+
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .card-status{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:11px;letter-spacing:0.06em;font-family:"JetBrains Mono",monospace;background:rgba(232,185,40,0.12);color:var(--ochre);border:1px solid rgba(232,185,40,0.4)}
+  .card-status .d{width:6px;height:6px;border-radius:50%;background:var(--ochre)}
+  .card-status.soon{background:transparent;color:var(--on-green-soft);border-color:rgba(235,227,211,0.2)}
+  .card-status.soon .d{background:var(--on-green-soft)}
+  .card-num{font-family:"Unbounded";font-weight:700;font-size:13px;color:var(--on-green-soft);letter-spacing:-0.01em}
+
+  .card-visual{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    background:var(--green-deep);
+    border:1px solid var(--rule-green);
+    min-height:220px;position:relative;overflow:hidden;
+  }
+  .card.featured .card-visual{flex:1.1;min-height:auto}
+  .card.placeholder .card-visual{background:transparent;border:1px dashed rgba(235,227,211,0.15)}
+
+  .card-body{display:flex;flex-direction:column;gap:14px;flex:1}
+  .card.featured .card-body{padding:6px 0 6px;justify-content:space-between;max-width:46%}
+  @media (max-width:920px){.card.featured .card-body{max-width:100%}}
+
+  .card-title{font-family:"Unbounded";font-weight:700;font-size: clamp(28px, 3vw, 40px);line-height:0.98;letter-spacing:-0.02em;color:var(--on-green)}
+  .card.placeholder .card-title{color:rgba(235,227,211,0.55)}
+  .card-sub{color:var(--on-green-soft);font-size:14px;letter-spacing:0.02em}
+  .card-desc{color:var(--on-green-soft);font-size:15px;line-height:1.55;max-width:42ch}
+
+  .card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .tag{padding:4px 10px;border:1px solid var(--rule-green);border-radius:999px;font-size:11px;color:var(--on-green);letter-spacing:0.04em;font-family:"JetBrains Mono",monospace}
+
+  .card-cta{display:inline-flex;align-items:center;gap:10px;color:var(--on-green);text-decoration:none;font-size:14px;letter-spacing:0.02em;padding-top:4px;border-top:1px solid var(--rule-green);margin-top:8px;padding-top:18px;transition:gap 180ms ease, color 180ms ease}
+  .card-cta:hover{gap:14px;color:var(--ochre)}
+  .card-cta .ar{display:inline-block;transition:transform 180ms ease}
+  .card-cta:hover .ar{transform:translate(2px,-2px)}
+
+  .ph-body{display:flex;flex-direction:column;justify-content:space-between;flex:1;color:rgba(235,227,211,0.45)}
+  .ph-title{font-family:"Unbounded";font-weight:500;font-size:24px;line-height:1;letter-spacing:-0.015em;color:rgba(235,227,211,0.65)}
+  .ph-hint{font-size:13px;color:rgba(235,227,211,0.45);max-width:30ch}
+
+  .specimen-mandala g.ink{stroke:var(--ochre);fill:none;stroke-width:0.6}
+  .specimen-mandala g.ghost{stroke:rgba(235,227,211,0.18);fill:none;stroke-width:0.6}
+  .ph-mark{width:60%;height:60%;color:rgba(235,227,211,0.18)}
+
+  /* ---- SERVICES ---- */
+  .services-grid{display:grid;grid-template-columns: repeat(2, 1fr);gap:0;border-top:1px solid var(--rule-cream);border-bottom:1px solid var(--rule-cream)}
+  @media (max-width:760px){.services-grid{grid-template-columns:1fr}}
+  .service{
+    padding: 44px 36px;border-right:1px solid var(--rule-cream);border-bottom:1px solid var(--rule-cream);
+    display:flex;flex-direction:column;gap:14px;
+    transition: background 200ms ease;
+  }
+  .service:hover{background:var(--cream-deep)}
+  .service:nth-child(2n){border-right:0}
+  @media (max-width:760px){.service{border-right:0}}
+  .service-num{font-family:"Unbounded";font-weight:700;font-size:13px;color:var(--ochre);letter-spacing:-0.01em}
+  .service-title{font-family:"Unbounded";font-weight:700;font-size:clamp(22px, 2.4vw, 32px);line-height:1.02;letter-spacing:-0.02em;color:var(--ink)}
+  .service-desc{color:var(--ink-soft);font-size:15px;line-height:1.55;max-width:40ch}
+  .service-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .tag-cream{padding:3px 9px;background:var(--cream-deep);font-size:11px;color:var(--ink-soft);letter-spacing:0.04em;font-family:"JetBrains Mono",monospace}
+
+  /* ---- CONTACT ---- */
+  .contact-body{display:grid;grid-template-columns: 1fr 1fr;gap:60px;align-items:end}
+  @media (max-width:760px){.contact-body{grid-template-columns:1fr;gap:36px}}
+  .contact-pitch{
+    font-family:"Unbounded",sans-serif;font-weight:700;
+    font-size: clamp(36px, 5.6vw, 72px);
+    line-height:0.96;letter-spacing:-0.03em;
+    color:var(--on-green);max-width:14ch;
+  }
+  .contact-pitch .accent{color:var(--ochre)}
+  .contact-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule-green)}
+  .contact-list a{
+    display:flex;justify-content:space-between;align-items:center;gap:20px;
+    padding: 22px 0;border-bottom:1px solid var(--rule-green);
+    color:var(--on-green);text-decoration:none;
+    font-family:"Unbounded";font-weight:500;font-size:20px;letter-spacing:-0.01em;
+    transition: color 180ms ease, padding 180ms ease;
+  }
+  .contact-list a:hover{color:var(--ochre);padding-left:14px}
+  .contact-list a .ar{font-size:18px;color:var(--on-green-soft);transition:color 180ms ease, transform 180ms ease}
+  .contact-list a:hover .ar{color:var(--ochre);transform:translate(4px,-4px)}
+  .contact-list a .hint{font-size:12px;color:var(--on-green-soft);font-family:"JetBrains Mono",monospace;letter-spacing:0.06em;font-weight:400}
+
+  /* ---- FOOTER ---- */
+  footer{background:var(--green-deep);color:var(--on-green-soft);padding:32px 0;border-top:1px solid var(--rule-green)}
+  footer .inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  footer .l{font-family:"Unbounded";font-weight:500;font-size:14px;color:var(--on-green);letter-spacing:-0.01em}
+  footer .r{font-size:12px;letter-spacing:0.04em}
+
+  /* ---- REVEAL ---- */
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity 800ms ease, transform 800ms ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    .live-dot{animation:none}
+  }
+
+  ::selection{background:var(--ochre);color:var(--ink)}
+
+  /* =========================================================
+     ====================  CHAT WIDGET  =======================
+     ========================================================= */
+
+  .chat-toggle{
+    position:fixed;bottom:22px;right:22px;z-index:90;
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 20px;border-radius:999px;border:none;cursor:pointer;
+    background:var(--ink);color:var(--cream);
+    font-family:"Onest";font-size:13.5px;letter-spacing:0.02em;
+    box-shadow:0 10px 30px rgba(0,0,0,0.28);
+    transition: transform 200ms ease, background 200ms ease;
+  }
+  .chat-toggle:hover{transform:translateY(-2px);background:var(--green)}
+  .chat-toggle .dot{width:7px;height:7px;border-radius:50%;background:var(--ochre);flex:none}
+  .chat-toggle .badge{
+    position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:999px;
+    background:var(--ochre);color:var(--ink);font-size:10px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;padding:0 4px;
+    font-family:"JetBrains Mono",monospace;
+  }
+  @media (max-width:480px){.chat-toggle{bottom:16px;right:16px;padding:12px 16px;font-size:12.5px}}
+
+  .chat-panel{
+    position:fixed;bottom:88px;right:22px;z-index:91;
+    width:380px;max-width:calc(100vw - 32px);
+    height:560px;max-height:70vh;
+    background:var(--cream);color:var(--ink);
+    border-radius:18px;overflow:hidden;
+    box-shadow:0 24px 64px rgba(0,0,0,0.35);
+    display:flex;flex-direction:column;
+    transform: translateY(16px) scale(0.98);opacity:0;pointer-events:none;
+    transition: transform 220ms ease, opacity 220ms ease;
+  }
+  .chat-panel.open{transform:none;opacity:1;pointer-events:auto}
+  @media (max-width:480px){.chat-panel{bottom:78px;right:16px;height:65vh}}
+
+  .chat-head{
+    background:var(--green);color:var(--on-green);
+    padding:18px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;
+    flex:none;
+  }
+  .chat-head .ttl{display:flex;align-items:center;gap:10px}
+  .chat-head .ttl .back{cursor:pointer;color:var(--on-green-soft);font-size:18px;line-height:1;background:none;border:none;padding:2px}
+  .chat-head .ttl .back:hover{color:var(--ochre)}
+  .chat-head .ttl h4{font-family:"Unbounded";font-weight:600;font-size:15px;letter-spacing:-0.01em}
+  .chat-head .ttl .sub{font-size:11px;color:var(--on-green-soft);font-family:"JetBrains Mono",monospace;letter-spacing:0.04em}
+  .chat-head .acts{display:flex;align-items:center;gap:10px}
+  .chat-head button.icon{background:none;border:none;cursor:pointer;color:var(--on-green-soft);font-size:13px;font-family:"Onest"}
+  .chat-head button.icon:hover{color:var(--ochre)}
+
+  .chat-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--cream)}
+  .chat-body::-webkit-scrollbar{width:6px}
+  .chat-body::-webkit-scrollbar-thumb{background:var(--cream-deep);border-radius:6px}
+
+  .chat-empty{margin:auto;text-align:center;color:var(--ink-soft);display:flex;flex-direction:column;gap:14px;align-items:center;padding:20px}
+  .chat-empty .g-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--ink);color:var(--cream);border:none;border-radius:999px;
+    padding:12px 20px;font-size:14px;cursor:pointer;font-family:"Onest";font-weight:500;
+    transition: background 180ms ease;
+  }
+  .chat-empty .g-btn:hover{background:var(--green)}
+  .chat-empty p{font-size:13.5px;max-width:26ch;line-height:1.5}
+  .chat-empty .note{font-size:11px;color:var(--ink-soft);font-family:"JetBrains Mono",monospace}
+
+  .chat-msg{max-width:78%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.45;position:relative}
+  .chat-msg .t{display:block;margin-top:4px;font-size:10px;opacity:0.55;font-family:"JetBrains Mono",monospace}
+  .chat-msg.theirs{align-self:flex-start;background:var(--cream-deep);color:var(--ink);border-bottom-left-radius:4px}
+  .chat-msg.mine{align-self:flex-end;background:var(--green);color:var(--on-green);border-bottom-right-radius:4px}
+
+  .chat-foot{flex:none;border-top:1px solid var(--rule-cream);background:var(--cream);padding:12px;display:flex;gap:8px;align-items:flex-end}
+  .chat-foot textarea{
+    flex:1;resize:none;border:1px solid var(--rule-cream);border-radius:12px;
+    padding:10px 12px;font-family:"Onest";font-size:14px;background:#fff;color:var(--ink);
+    max-height:90px;min-height:40px;line-height:1.4;
+  }
+  .chat-foot textarea:focus{outline:2px solid var(--ochre);outline-offset:1px}
+  .chat-foot button{
+    background:var(--ink);color:var(--cream);border:none;border-radius:12px;
+    padding:0 16px;height:40px;font-size:13px;cursor:pointer;font-family:"Onest";font-weight:500;
+    transition: background 180ms ease;flex:none;
+  }
+  .chat-foot button:hover{background:var(--green)}
+  .chat-foot button:disabled{opacity:0.4;cursor:default}
+
+  .thread-item{
+    display:flex;gap:12px;align-items:center;padding:12px 6px;border-radius:10px;cursor:pointer;
+    transition: background 160ms ease;
+  }
+  .thread-item:hover{background:var(--cream-deep)}
+  .thread-item .av{
+    width:38px;height:38px;border-radius:50%;background:var(--green);color:var(--on-green);
+    display:flex;align-items:center;justify-content:center;font-family:"Unbounded";font-weight:600;font-size:14px;flex:none;
+  }
+  .thread-item .info{flex:1;min-width:0}
+  .thread-item .info .nm{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+  .thread-item .info .pv{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .thread-item .unread{width:8px;height:8px;border-radius:50%;background:var(--ochre);flex:none}
+
+  .chat-status-line{padding:10px 18px;font-size:12px;color:var(--ink-soft);text-align:center;font-family:"JetBrains Mono",monospace}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap inner">
+    <div class="brand">SEMA<span>.</span></div>
+    <div class="links">
+      <a href="#about">обо мне</a>
+      <a href="#work">работы</a>
+      <a href="#services">услуги</a>
+      <a href="#contact">контакты</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="block block--green hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <div class="label">
+        <span class="mono">портфолио / 2026</span>
+        <span class="v">Sema · разработчик</span>
+      </div>
+      <div class="label" style="text-align:right;align-items:flex-end">
+        <span class="mono">статус</span>
+        <span class="v live"><span class="live-dot"></span>открыт к заказам</span>
+      </div>
+    </div>
+
+    <h1 class="manifesto">
+      Сайты<br/>
+      с&nbsp;настоящей<br/>
+      <span class="accent">начинкой.</span>
+    </h1>
+
+    <div class="hero-bottom">
+      <p class="desc">
+        Делаю <strong>сайты и&nbsp;веб-приложения</strong> под&nbsp;клиентов: лендинги, корпоративные сайты, бронь, админки, боты&nbsp;и&nbsp;интеграции. От&nbsp;первого экрана до&nbsp;боевого деплоя — один человек, без&nbsp;агентского туда-сюда.
+      </p>
+      <div class="index">
+        <span class="mono">в этом портфолио</span>
+        <a href="#about">→ обо мне</a>
+        <a href="#work">→ кейс</a>
+        <a href="#services">→ что делаю на заказ</a>
+        <a href="#contact">→ как со мной связаться</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section class="block block--cream" id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">
+        <span class="num">01 / 04</span>
+        <span class="mono" style="color:var(--ink-soft)">обо мне</span>
+      </div>
+      <h2 class="title">Один разработчик, который&nbsp;<span style="color:var(--ochre)">правда</span>&nbsp;делает.</h2>
+    </div>
+
+    <div class="about-body reveal">
+      <div class="label">
+        <span class="mono" style="color:var(--ink-soft)">кто</span><br/>
+        Sema<br/><br/>
+        <span class="mono" style="color:var(--ink-soft)">где</span><br/>
+        удалённо<br/><br/>
+        <span class="mono" style="color:var(--ink-soft)">с кем</span><br/>
+        малый бизнес,<br/>студии, авторы продуктов
+      </div>
+      <div>
+        <p>Я <strong>фул-стек разработчик</strong>. Работаю с теми, кому нужен живой сайт, а не картинка из конструктора: с расписанием, оплатой, личным кабинетом, ботом — со всем, что должно реально работать после запуска.</p>
+        <p>Беру проект целиком: разбираюсь в задаче, рисую, пишу, выкатываю, поддерживаю. Без посредников и без «это к другому отделу».</p>
+      </div>
+      <div class="right">
+        <div class="about-quick">
+          <div class="row"><span class="k">основной стек</span><span class="v">Next · React · Firebase</span></div>
+          <div class="row"><span class="k">платежи / боты</span><span class="v">Telegram Bot API</span></div>
+          <div class="row"><span class="k">деплой</span><span class="v">Vercel · CI/CD</span></div>
+          <div class="row"><span class="k">сроки</span><span class="v">от 2 недель</span></div>
+          <div class="row"><span class="k">языки</span><span class="v">RU · EN</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="block block--green" id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">
+        <span class="num">02 / 04</span>
+        <span class="mono" style="color:var(--on-green-soft)">работы</span>
+      </div>
+      <h2 class="title">Один кейс в&nbsp;продакшене, остальное&nbsp;— <span style="color:var(--ochre)">в&nbsp;пути.</span></h2>
+    </div>
+
+    <div class="work-grid reveal">
+
+      <!-- FEATURED: СВЕТЛИЦА -->
+      <article class="card featured">
+        <div class="card-visual">
+          <svg class="specimen-mandala" viewBox="0 0 240 240" width="80%" height="80%" aria-hidden="true">
+            <g class="ghost">
+              <circle cx="120" cy="120" r="100"/>
+              <circle cx="120" cy="120" r="80"/>
+              <circle cx="120" cy="120" r="60"/>
+              <circle cx="120" cy="120" r="40"/>
+              <circle cx="120" cy="120" r="20"/>
+            </g>
+            <g class="ink">
+              <circle cx="120" cy="120" r="100"/>
+              <circle cx="120" cy="120" r="80"/>
+              <circle cx="120" cy="120" r="60"/>
+              <circle cx="120" cy="120" r="40"/>
+              <circle cx="120" cy="120" r="20"/>
+              <line x1="120" y1="20" x2="120" y2="220"/>
+              <line x1="20" y1="120" x2="220" y2="120"/>
+              <line x1="49" y1="49" x2="191" y2="191"/>
+              <line x1="191" y1="49" x2="49" y2="191"/>
+            </g>
+            <circle cx="120" cy="120" r="3" fill="#E8B928"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div>
+            <div class="card-top">
+              <span class="card-status"><span class="d"></span>в&nbsp;продакшене</span>
+              <span class="card-num">№&nbsp;01</span>
+            </div>
+            <h3 class="card-title" style="margin-top:18px">СВЕТлица</h3>
+            <p class="card-sub" style="margin-top:6px">студия йоги и танца · 2026</p>
+            <p class="card-desc" style="margin-top:18px">
+              Сайт для студии: расписание и&nbsp;бронь в&nbsp;реальном времени, мульти-админка для&nbsp;преподавателей, галерея и&nbsp;оплата занятий через&nbsp;Telegram-бота. Полностью доделан и&nbsp;развёрнут.
+            </p>
+            <div class="card-tags">
+              <span class="tag">Next.js</span>
+              <span class="tag">Firebase</span>
+              <span class="tag">Telegram&nbsp;Bot</span>
+              <span class="tag">Vercel</span>
+            </div>
+          </div>
+          <a class="card-cta" href="https://cvetlica.vercel.app/" target="_blank" rel="noopener">открыть сайт <span class="ar">↗</span></a>
+        </div>
+      </article>
+
+      <!-- PLACEHOLDER 1 -->
+      <article class="card placeholder">
+        <div class="card-top">
+          <span class="card-status soon"><span class="d"></span>скоро</span>
+          <span class="card-num">№&nbsp;02</span>
+        </div>
+        <div class="card-visual">
+          <svg class="ph-mark" viewBox="0 0 100 100" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="0.8">
+            <rect x="14" y="14" width="72" height="72" stroke-dasharray="3 4"/>
+            <line x1="14" y1="14" x2="86" y2="86" stroke-dasharray="1 3"/>
+            <line x1="86" y1="14" x2="14" y2="86" stroke-dasharray="1 3"/>
+          </svg>
+        </div>
+        <div class="ph-body">
+          <h3 class="ph-title">место для<br/>следующего&nbsp;проекта</h3>
+          <p class="ph-hint">здесь будет лендинг&nbsp;— на&nbsp;подходе.</p>
+        </div>
+      </article>
+
+      <!-- PLACEHOLDER 2 -->
+      <article class="card placeholder">
+        <div class="card-top">
+          <span class="card-status soon"><span class="d"></span>скоро</span>
+          <span class="card-num">№&nbsp;03</span>
+        </div>
+        <div class="card-visual">
+          <svg class="ph-mark" viewBox="0 0 100 100" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="0.8">
+            <circle cx="50" cy="50" r="32" stroke-dasharray="3 4"/>
+            <circle cx="50" cy="50" r="16"/>
+            <circle cx="50" cy="50" r="3" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="ph-body">
+          <h3 class="ph-title">место для<br/>веб-приложения</h3>
+          <p class="ph-hint">админка / дашборд / личный кабинет.</p>
+        </div>
+      </article>
+
+      <!-- PLACEHOLDER 3 -->
+      <article class="card placeholder">
+        <div class="card-top">
+          <span class="card-status soon"><span class="d"></span>скоро</span>
+          <span class="card-num">№&nbsp;04</span>
+        </div>
+        <div class="card-visual">
+          <svg class="ph-mark" viewBox="0 0 100 100" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="0.8">
+            <path d="M20 70 L40 40 L55 55 L80 25" stroke-dasharray="3 4"/>
+            <circle cx="40" cy="40" r="2" fill="currentColor"/>
+            <circle cx="55" cy="55" r="2" fill="currentColor"/>
+            <circle cx="80" cy="25" r="2" fill="currentColor"/>
+            <line x1="14" y1="86" x2="86" y2="86"/>
+            <line x1="14" y1="14" x2="14" y2="86"/>
+          </svg>
+        </div>
+        <div class="ph-body">
+          <h3 class="ph-title">место для<br/>интеграции&nbsp;или&nbsp;бота</h3>
+          <p class="ph-hint">Telegram, платежи, AI-агент.</p>
+        </div>
+      </article>
+
+      <!-- BIG CTA CARD -->
+      <article class="card" style="grid-column:span 6;background:var(--ochre);border-color:var(--ochre);min-height:auto;flex-direction:row;align-items:center;justify-content:space-between;padding:32px 36px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span class="card-num" style="color:var(--ink);opacity:0.6">№&nbsp;05 — пусто</span>
+          <h3 class="card-title" style="color:var(--ink);font-size:clamp(22px, 2.6vw, 34px)">Здесь может быть твой&nbsp;проект.</h3>
+        </div>
+        <a class="card-cta" href="#contact" style="color:var(--ink);border-top:0;padding-top:0;margin-top:0;font-family:'Unbounded';font-weight:500;font-size:15px">обсудить <span class="ar">↗</span></a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="block block--cream" id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">
+        <span class="num">03 / 04</span>
+        <span class="mono" style="color:var(--ink-soft)">что делаю на заказ</span>
+      </div>
+      <h2 class="title">Четыре формата.<br/>Можно&nbsp;<span style="color:var(--ochre)">собирать</span> комбинациями.</h2>
+    </div>
+
+    <div class="services-grid reveal">
+
+      <div class="service">
+        <span class="service-num">/&nbsp;01</span>
+        <h3 class="service-title">Сайты под ключ</h3>
+        <p class="service-desc">Лендинги, корпоративные сайты, многостраничники. От брифа до&nbsp;продакшена, с&nbsp;адаптивом и&nbsp;CMS, если&nbsp;нужно.</p>
+        <div class="service-tags">
+          <span class="tag-cream">Next.js</span><span class="tag-cream">Astro</span><span class="tag-cream">Vercel</span>
+        </div>
+      </div>
+
+      <div class="service">
+        <span class="service-num">/&nbsp;02</span>
+        <h3 class="service-title">Веб-приложения</h3>
+        <p class="service-desc">Личный кабинет, админка, дашборд, бронирование, каталог с&nbsp;корзиной. Реальная логика&nbsp;и&nbsp;база данных.</p>
+        <div class="service-tags">
+          <span class="tag-cream">React</span><span class="tag-cream">Firebase</span><span class="tag-cream">Postgres</span>
+        </div>
+      </div>
+
+      <div class="service">
+        <span class="service-num">/&nbsp;03</span>
+        <h3 class="service-title">Telegram-боты</h3>
+        <p class="service-desc">Оплата, нотификации, мини-аппы, заявки. Интегрируется&nbsp;с&nbsp;твоим сайтом и&nbsp;CRM, без&nbsp;конструкторов.</p>
+        <div class="service-tags">
+          <span class="tag-cream">Bot API</span><span class="tag-cream">Webhooks</span><span class="tag-cream">Mini Apps</span>
+        </div>
+      </div>
+
+      <div class="service">
+        <span class="service-num">/&nbsp;04</span>
+        <h3 class="service-title">AI-интеграции</h3>
+        <p class="service-desc">Чат-ассистент с&nbsp;памятью, голосовой агент, авто-обработка заявок. Подключение OpenAI, локальные модели через Ollama.</p>
+        <div class="service-tags">
+          <span class="tag-cream">OpenAI</span><span class="tag-cream">Ollama</span><span class="tag-cream">Whisper</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="block block--green" id="contact">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">
+        <span class="num">04 / 04</span>
+        <span class="mono" style="color:var(--on-green-soft)">контакты</span>
+      </div>
+      <h2 class="title">Если есть, что&nbsp;<span style="color:var(--ochre)">собрать</span>&nbsp;— пиши.</h2>
+    </div>
+
+    <div class="contact-body reveal">
+      <div class="contact-pitch">
+        Отвечаю в течение&nbsp;дня. Брифую сам<span class="accent">.</span>
+      </div>
+      <div class="contact-list">
+        <a href="https://t.me/noname067067" target="_blank" rel="noopener">
+          <span>Telegram <span class="hint">@noname067067</span></span>
+          <span class="ar">↗</span>
+        </a>
+        <a href="tel:+79930124390">
+          <span>Телефон <span class="hint">+7 993 012 43 90</span></span>
+          <span class="ar">↗</span>
+        </a>
+        <a href="mailto:ВПИШИ_СВОЙ_EMAIL@gmail.com">
+          <span>Email <span class="hint">впиши почту</span></span>
+          <span class="ar">↗</span>
+        </a>
+        <a href="https://github.com/Noname424224" target="_blank" rel="noopener">
+          <span>GitHub <span class="hint">— код, опенсорс</span></span>
+          <span class="ar">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap inner">
+    <div class="l">SEMA<span style="color:var(--ochre)">.</span></div>
+    <div class="r">© 2026 · сделано вручную · набрано Unbounded&nbsp;и&nbsp;Onest</div>
+  </div>
+</footer>
+
+<!-- ============ CHAT WIDGET ============ -->
+<button class="chat-toggle" id="chatToggle">
+  <span class="dot"></span>
+  <span id="chatToggleLabel">Написать</span>
+  <span class="badge" id="chatBadge" style="display:none">1</span>
+</button>
+
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="ttl">
+      <button class="back" id="chatBack" style="display:none">←</button>
+      <div>
+        <h4 id="chatTitle">Чат с Sema</h4>
+        <div class="sub" id="chatSub">войди через Google</div>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="icon" id="chatSignout" style="display:none">выйти</button>
+      <button class="icon" id="chatClose">✕</button>
+    </div>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-empty">
+      <p>Войди через Google, чтобы написать мне напрямую — отвечаю сам, обычно в течение дня.</p>
+      <button class="g-btn" id="chatLoginBtn">Войти через Google</button>
+      <span class="note" id="chatConfigNote" style="display:none">чат подключается, скоро заработает</span>
+    </div>
+  </div>
+  <div class="chat-foot" id="chatFoot" style="display:none">
+    <textarea id="chatInput" placeholder="Напиши сообщение…" rows="1"></textarea>
+    <button id="chatSend">→</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+  import {
+    getFirestore, doc, setDoc, updateDoc, addDoc, collection,
+    query, orderBy, onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+  /* =====================================================================
+     ШАГ 1. Вставь сюда свой Firebase config
+     (Firebase Console → Project settings → твоё веб-приложение → SDK config)
+  ===================================================================== */
+  const firebaseConfig = {
+    apiKey: "ВСТАВЬ_СЮДА",
+    authDomain: "ВСТАВЬ_СЮДА",
+    projectId: "ВСТАВЬ_СЮДА",
+    storageBucket: "ВСТАВЬ_СЮДА",
+    messagingSenderId: "ВСТАВЬ_СЮДА",
+    appId: "ВСТАВЬ_СЮДА"
+  };
+
+  /* =====================================================================
+     ШАГ 2. Впиши email, с которым ТЫ будешь заходить как владелец чата.
+     Именно с этим email в Firestore Rules должен совпадать request.auth.token.email
+  ===================================================================== */
+  const ADMIN_EMAIL = "ВПИШИ_СВОЙ_GMAIL@gmail.com";
+
+  const CHAT_CONFIGURED = firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("ВСТАВЬ");
+
+  let app, auth, db, provider;
+  if (CHAT_CONFIGURED) {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    provider = new GoogleAuthProvider();
+  }
+
+  // ---------- DOM ----------
+  const toggleBtn   = document.getElementById('chatToggle');
+  const toggleLabel = document.getElementById('chatToggleLabel');
+  const badge       = document.getElementById('chatBadge');
+  const panel       = document.getElementById('chatPanel');
+  const closeBtn    = document.getElementById('chatClose');
+  const backBtn     = document.getElementById('chatBack');
+  const signoutBtn  = document.getElementById('chatSignout');
+  const titleEl     = document.getElementById('chatTitle');
+  const subEl       = document.getElementById('chatSub');
+  const bodyEl      = document.getElementById('chatBody');
+  const footEl      = document.getElementById('chatFoot');
+  const inputEl     = document.getElementById('chatInput');
+  const sendBtn     = document.getElementById('chatSend');
+  const configNote  = document.getElementById('chatConfigNote');
+  const loginBtnInit = document.getElementById('chatLoginBtn');
+
+  let isOpen = false;
+  let currentUser = null;
+  let isAdmin = false;
+  let activeThreadId = null;     // thread currently shown in conversation view
+  let unsubMessages = null;
+  let unsubThreads = null;
+
+  if (!CHAT_CONFIGURED) {
+    configNote.style.display = 'block';
+    loginBtnInit.disabled = true;
+    loginBtnInit.style.opacity = '0.5';
+    loginBtnInit.style.cursor = 'default';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    isOpen = !isOpen;
+    panel.classList.toggle('open', isOpen);
+    if (isOpen) { badge.style.display = 'none'; }
+  });
+  closeBtn.addEventListener('click', () => { isOpen = false; panel.classList.remove('open'); });
+
+  loginBtnInit.addEventListener('click', doLogin);
+  signoutBtn.addEventListener('click', () => signOut(auth));
+  backBtn.addEventListener('click', () => {
+    if (isAdmin) { detachMessages(); activeThreadId = null; renderAdminThreadList(); }
+  });
+
+  inputEl.addEventListener('input', () => {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 90) + 'px';
+  });
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  sendBtn.addEventListener('click', sendMessage);
+
+  async function doLogin() {
+    if (!CHAT_CONFIGURED) return;
+    try { await signInWithPopup(auth, provider); }
+    catch (e) { console.error(e); alert('Не получилось войти. Попробуй ещё раз.'); }
+  }
+
+  function detachMessages() {
+    if (unsubMessages) { unsubMessages(); unsubMessages = null; }
+    bodyEl.innerHTML = '';
+  }
+  function detachThreads() {
+    if (unsubThreads) { unsubThreads(); unsubThreads = null; }
+  }
+
+  function renderLoggedOut() {
+    detachMessages(); detachThreads();
+    activeThreadId = null;
+    backBtn.style.display = 'none';
+    signoutBtn.style.display = 'none';
+    footEl.style.display = 'none';
+    titleEl.textContent = 'Чат с Sema';
+    subEl.textContent = CHAT_CONFIGURED ? 'войди через Google' : 'скоро';
+    bodyEl.innerHTML = `
+      <div class="chat-empty">
+        <p>Войди через Google, чтобы написать мне напрямую — отвечаю сам, обычно в течение дня.</p>
+        <button class="g-btn" id="chatLoginBtn2" ${CHAT_CONFIGURED ? '' : 'disabled style="opacity:.5;cursor:default"'}>Войти через Google</button>
+        ${CHAT_CONFIGURED ? '' : '<span class="note">чат подключается, скоро заработает</span>'}
+      </div>`;
+    const b = document.getElementById('chatLoginBtn2');
+    if (b) b.addEventListener('click', doLogin);
+  }
+
+  if (CHAT_CONFIGURED) {
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        isAdmin = user.email === ADMIN_EMAIL;
+        signoutBtn.style.display = 'inline-block';
+        footEl.style.display = 'flex';
+        if (isAdmin) { renderAdminThreadList(); }
+        else { renderVisitorChat(user); }
+      } else {
+        renderLoggedOut();
+      }
+    });
+  } else {
+    renderLoggedOut();
+  }
+
+  // ---------------- VISITOR ----------------
+  function renderVisitorChat(user) {
+    backBtn.style.display = 'none';
+    titleEl.textContent = 'Чат с Sema';
+    subEl.textContent = 'обычно отвечаю в течение дня';
+    activeThreadId = user.uid;
+
+    const threadRef = doc(db, 'threads', user.uid);
+    setDoc(threadRef, {
+      visitorName: user.displayName || 'Гость',
+      visitorEmail: user.email || '',
+      visitorPhoto: user.photoURL || '',
+      updatedAt: serverTimestamp()
+    }, { merge: true }).catch(console.error);
+
+    bodyEl.innerHTML = '<div class="chat-status-line">загрузка…</div>';
+    const msgsRef = query(collection(db, 'threads', user.uid, 'messages'), orderBy('createdAt', 'asc'));
+    detachMessages();
+    unsubMessages = onSnapshot(msgsRef, (snap) => {
+      bodyEl.innerHTML = '';
+      if (snap.empty) {
+        bodyEl.innerHTML = '<div class="chat-status-line">Напиши первое сообщение — я отвечу.</div>';
+      }
+      snap.forEach((d) => renderMsg(d.data()));
+      bodyEl.scrollTop = bodyEl.scrollHeight;
+    }, console.error);
+  }
+
+  // ---------------- ADMIN ----------------
+  function renderAdminThreadList() {
+    backBtn.style.display = 'none';
+    titleEl.textContent = 'Входящие';
+    subEl.textContent = 'все треды';
+    footEl.style.display = 'none';
+    detachMessages();
+    bodyEl.innerHTML = '<div class="chat-status-line">загрузка…</div>';
+
+    const threadsRef = query(collection(db, 'threads'), orderBy('lastMessageAt', 'desc'));
+    detachThreads();
+    unsubThreads = onSnapshot(threadsRef, (snap) => {
+      if (snap.empty) {
+        bodyEl.innerHTML = '<div class="chat-status-line">Пока никто не писал.</div>';
+        return;
+      }
+      bodyEl.innerHTML = '';
+      snap.forEach((d) => {
+        const t = d.data();
+        const row = document.createElement('div');
+        row.className = 'thread-item';
+        const initial = (t.visitorName || '?').trim().charAt(0).toUpperCase();
+        row.innerHTML = `
+          <div class="av">${initial}</div>
+          <div class="info">
+            <div class="nm">${escapeHtml(t.visitorName || 'Гость')} ${t.unreadByAdmin ? '<span class="unread"></span>' : ''}</div>
+            <div class="pv">${escapeHtml(t.lastMessage || '')}</div>
+          </div>`;
+        row.addEventListener('click', () => openAdminThread(d.id, t));
+        bodyEl.appendChild(row);
+      });
+    }, console.error);
+  }
+
+  function openAdminThread(threadId, threadData) {
+    activeThreadId = threadId;
+    detachThreads();
+    backBtn.style.display = 'inline-block';
+    titleEl.textContent = threadData.visitorName || 'Гость';
+    subEl.textContent = threadData.visitorEmail || '';
+    footEl.style.display = 'flex';
+    bodyEl.innerHTML = '<div class="chat-status-line">загрузка…</div>';
+
+    updateDoc(doc(db, 'threads', threadId), { unreadByAdmin: false }).catch(console.error);
+
+    const msgsRef = query(collection(db, 'threads', threadId, 'messages'), orderBy('createdAt', 'asc'));
+    detachMessages();
+    unsubMessages = onSnapshot(msgsRef, (snap) => {
+      bodyEl.innerHTML = '';
+      snap.forEach((d) => renderMsg(d.data(), true));
+      bodyEl.scrollTop = bodyEl.scrollHeight;
+    }, console.error);
+  }
+
+  // ---------------- SHARED ----------------
+  function renderMsg(m, asAdminView = false) {
+    const mine = asAdminView ? m.isAdmin : !m.isAdmin;
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + (mine ? 'mine' : 'theirs');
+    const time = m.createdAt && m.createdAt.toDate ? m.createdAt.toDate() : null;
+    const timeStr = time ? time.toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }) : '';
+    el.innerHTML = `${escapeHtml(m.text || '')}<span class="t">${timeStr}</span>`;
+    bodyEl.appendChild(el);
+  }
+
+  async function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text || !currentUser || !activeThreadId) return;
+    inputEl.value = ''; inputEl.style.height = 'auto';
+    try {
+      await addDoc(collection(db, 'threads', activeThreadId, 'messages'), {
+        text,
+        senderId: currentUser.uid,
+        senderName: currentUser.displayName || (isAdmin ? 'Sema' : 'Гость'),
+        isAdmin: isAdmin,
+        createdAt: serverTimestamp()
+      });
+      await updateDoc(doc(db, 'threads', activeThreadId), {
+        lastMessage: text,
+        lastMessageAt: serverTimestamp(),
+        unreadByAdmin: isAdmin ? false : true
+      });
+    } catch (e) { console.error(e); }
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+  }
+</script>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries){
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    }
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
