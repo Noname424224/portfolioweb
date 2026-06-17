@@ -300,6 +300,13 @@
   .chat-empty .g-btn:hover{background:var(--green)}
   .chat-empty p{font-size:13.5px;max-width:26ch;line-height:1.5}
   .chat-empty .note{font-size:11px;color:var(--ink-soft);font-family:"JetBrains Mono",monospace}
+  .chat-login-input{
+    width:100%;max-width:240px;
+    border:1px solid var(--rule-cream);border-radius:10px;
+    padding:10px 12px;font-family:"Onest";font-size:13.5px;background:#fff;color:var(--ink);
+  }
+  .chat-login-input:focus{outline:2px solid var(--ochre);outline-offset:1px}
+  .login-err{font-size:12px;color:#B4423A;min-height:14px}
 
   .chat-msg{max-width:78%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.45;position:relative}
   .chat-msg .t{display:block;margin-top:4px;font-size:10px;opacity:0.55;font-family:"JetBrains Mono",monospace}
@@ -669,7 +676,7 @@
       <button class="back" id="chatBack" style="display:none">←</button>
       <div>
         <h4 id="chatTitle">Чат с Sema</h4>
-        <div class="sub" id="chatSub">войди через Google</div>
+        <div class="sub" id="chatSub">войди, чтобы написать</div>
       </div>
     </div>
     <div class="acts">
@@ -679,8 +686,12 @@
   </div>
   <div class="chat-body" id="chatBody">
     <div class="chat-empty">
-      <p>Войди через Google, чтобы написать мне напрямую — отвечаю сам, обычно в течение дня.</p>
-      <button class="g-btn" id="chatLoginBtn">Войти через Google</button>
+      <p>Войди, чтобы написать мне напрямую — отвечаю сам, обычно в течение дня.</p>
+      <input class="chat-login-input" id="loginName" type="text" placeholder="Имя" />
+      <input class="chat-login-input" id="loginEmail" type="email" placeholder="Email" />
+      <input class="chat-login-input" id="loginPassword" type="password" placeholder="Пароль (от 6 символов)" />
+      <span class="login-err" id="loginError"></span>
+      <button class="g-btn" id="chatLoginBtn">Войти</button>
       <span class="note" id="chatConfigNote" style="display:none">чат подключается, скоро заработает</span>
     </div>
   </div>
@@ -693,7 +704,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
   import {
-    getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult,
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile,
     setPersistence, browserLocalPersistence, signOut, onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
   import {
@@ -722,12 +733,11 @@
 
   const CHAT_CONFIGURED = firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("ВСТАВЬ");
 
-  let app, auth, db, provider;
+  let app, auth, db;
   if (CHAT_CONFIGURED) {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
-    provider = new GoogleAuthProvider();
     setPersistence(auth, browserLocalPersistence).catch((e) => console.error('persistence error', e));
   }
 
@@ -769,7 +779,6 @@
   });
   closeBtn.addEventListener('click', () => { isOpen = false; panel.classList.remove('open'); });
 
-  loginBtnInit.addEventListener('click', doLogin);
   signoutBtn.addEventListener('click', () => signOut(auth));
   backBtn.addEventListener('click', () => {
     if (isAdmin) { detachMessages(); activeThreadId = null; renderAdminThreadList(); }
@@ -784,10 +793,53 @@
   });
   sendBtn.addEventListener('click', sendMessage);
 
-  async function doLogin() {
+  bodyEl.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'chatLoginBtn') doEmailLogin();
+  });
+  bodyEl.addEventListener('keydown', (e) => {
+    if (e.target && e.target.id === 'loginPassword' && e.key === 'Enter') { e.preventDefault(); doEmailLogin(); }
+  });
+
+  async function doEmailLogin() {
     if (!CHAT_CONFIGURED) return;
-    try { await signInWithRedirect(auth, provider); }
-    catch (e) { console.error(e); alert('Не получилось войти. Попробуй ещё раз.'); }
+    const nameInput = document.getElementById('loginName');
+    const emailInput = document.getElementById('loginEmail');
+    const passInput = document.getElementById('loginPassword');
+    const errEl = document.getElementById('loginError');
+    if (!emailInput || !passInput) return;
+    const name = (nameInput && nameInput.value.trim()) || 'Гость';
+    const email = emailInput.value.trim();
+    const password = passInput.value;
+    if (errEl) errEl.textContent = '';
+    if (!email || !password) {
+      if (errEl) errEl.textContent = 'Заполни почту и пароль.';
+      return;
+    }
+    if (password.length < 6) {
+      if (errEl) errEl.textContent = 'Пароль должен быть не короче 6 символов.';
+      return;
+    }
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      console.log('[chat] signed in:', cred.user);
+      isOpen = true; panel.classList.add('open');
+    } catch (e1) {
+      console.log('[chat] sign-in failed, trying to create account:', e1.code);
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        if (name) { try { await updateProfile(cred.user, { displayName: name }); } catch (_) {} }
+        console.log('[chat] account created:', cred.user);
+        isOpen = true; panel.classList.add('open');
+      } catch (e2) {
+        console.error('[chat] create account failed:', e2);
+        if (errEl) {
+          if (e2.code === 'auth/email-already-in-use') errEl.textContent = 'Неверный пароль для этой почты.';
+          else if (e2.code === 'auth/invalid-email') errEl.textContent = 'Проверь формат почты.';
+          else if (e2.code === 'auth/weak-password') errEl.textContent = 'Пароль слишком простой.';
+          else errEl.textContent = 'Не получилось войти. Попробуй ещё раз.';
+        }
+      }
+    }
   }
 
   function detachMessages() {
@@ -798,6 +850,19 @@
     if (unsubThreads) { unsubThreads(); unsubThreads = null; }
   }
 
+  function loginFormHtml() {
+    return `
+      <div class="chat-empty">
+        <p>Войди, чтобы написать мне напрямую — отвечаю сам, обычно в течение дня.</p>
+        <input class="chat-login-input" id="loginName" type="text" placeholder="Имя" ${CHAT_CONFIGURED ? '' : 'disabled'} />
+        <input class="chat-login-input" id="loginEmail" type="email" placeholder="Email" ${CHAT_CONFIGURED ? '' : 'disabled'} />
+        <input class="chat-login-input" id="loginPassword" type="password" placeholder="Пароль (от 6 символов)" ${CHAT_CONFIGURED ? '' : 'disabled'} />
+        <span class="login-err" id="loginError"></span>
+        <button class="g-btn" id="chatLoginBtn" ${CHAT_CONFIGURED ? '' : 'disabled style="opacity:.5;cursor:default"'}>Войти</button>
+        ${CHAT_CONFIGURED ? '<span class="note">если такой почты ещё нет — аккаунт создастся сам</span>' : '<span class="note">чат подключается, скоро заработает</span>'}
+      </div>`;
+  }
+
   function renderLoggedOut() {
     detachMessages(); detachThreads();
     activeThreadId = null;
@@ -805,32 +870,11 @@
     signoutBtn.style.display = 'none';
     footEl.style.display = 'none';
     titleEl.textContent = 'Чат с Sema';
-    subEl.textContent = CHAT_CONFIGURED ? 'войди через Google' : 'скоро';
-    bodyEl.innerHTML = `
-      <div class="chat-empty">
-        <p>Войди через Google, чтобы написать мне напрямую — отвечаю сам, обычно в течение дня.</p>
-        <button class="g-btn" id="chatLoginBtn2" ${CHAT_CONFIGURED ? '' : 'disabled style="opacity:.5;cursor:default"'}>Войти через Google</button>
-        ${CHAT_CONFIGURED ? '' : '<span class="note">чат подключается, скоро заработает</span>'}
-      </div>`;
-    const b = document.getElementById('chatLoginBtn2');
-    if (b) b.addEventListener('click', doLogin);
+    subEl.textContent = CHAT_CONFIGURED ? 'войди, чтобы написать' : 'скоро';
+    bodyEl.innerHTML = loginFormHtml();
   }
 
   if (CHAT_CONFIGURED) {
-    console.log('[chat] init, checking redirect result…');
-    getRedirectResult(auth).then((result) => {
-      console.log('[chat] redirect result:', result);
-      if (result && result.user) {
-        isOpen = true;
-        panel.classList.add('open');
-      }
-    }).catch((e) => {
-      console.error('[chat] redirect error:', e);
-      if (e && e.code !== 'auth/no-current-user') {
-        alert('Не получилось войти. Попробуй ещё раз.');
-      }
-    });
-
     onAuthStateChanged(auth, (user) => {
       console.log('[chat] auth state changed, user:', user);
       currentUser = user;
