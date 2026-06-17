@@ -693,7 +693,8 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
   import {
-    getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged
+    getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult,
+    setPersistence, browserLocalPersistence, signOut, onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
   import {
     getFirestore, doc, setDoc, updateDoc, addDoc, collection,
@@ -727,6 +728,7 @@
     auth = getAuth(app);
     db = getFirestore(app);
     provider = new GoogleAuthProvider();
+    setPersistence(auth, browserLocalPersistence).catch((e) => console.error('persistence error', e));
   }
 
   // ---------- DOM ----------
@@ -815,19 +817,22 @@
   }
 
   if (CHAT_CONFIGURED) {
+    console.log('[chat] init, checking redirect result…');
     getRedirectResult(auth).then((result) => {
+      console.log('[chat] redirect result:', result);
       if (result && result.user) {
         isOpen = true;
         panel.classList.add('open');
       }
     }).catch((e) => {
-      console.error(e);
+      console.error('[chat] redirect error:', e);
       if (e && e.code !== 'auth/no-current-user') {
         alert('Не получилось войти. Попробуй ещё раз.');
       }
     });
 
     onAuthStateChanged(auth, (user) => {
+      console.log('[chat] auth state changed, user:', user);
       currentUser = user;
       if (user) {
         isAdmin = user.email === ADMIN_EMAIL;
