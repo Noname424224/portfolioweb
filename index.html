@@ -693,7 +693,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
   import {
-    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+    getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
   import {
     getFirestore, doc, setDoc, updateDoc, addDoc, collection,
@@ -784,7 +784,7 @@
 
   async function doLogin() {
     if (!CHAT_CONFIGURED) return;
-    try { await signInWithPopup(auth, provider); }
+    try { await signInWithRedirect(auth, provider); }
     catch (e) { console.error(e); alert('Не получилось войти. Попробуй ещё раз.'); }
   }
 
@@ -815,6 +815,18 @@
   }
 
   if (CHAT_CONFIGURED) {
+    getRedirectResult(auth).then((result) => {
+      if (result && result.user) {
+        isOpen = true;
+        panel.classList.add('open');
+      }
+    }).catch((e) => {
+      console.error(e);
+      if (e && e.code !== 'auth/no-current-user') {
+        alert('Не получилось войти. Попробуй ещё раз.');
+      }
+    });
+
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
