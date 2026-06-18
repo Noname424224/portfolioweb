@@ -3,568 +3,495 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sema — сайты, приложения, боты, ИИ-интеграции</title>
+<title>SEMA — цифровые продукты, собранные вручную</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#ECEAE2;
-    --bg-deep:#E2DECE;
-    --panel:#DAD5C2;
-    --ink:#14181B;
-    --ink-soft:#4B5358;
-    --ink-mute:#868D85;
-    --signal:#FF4B1F;
-    --signal-soft:rgba(255,75,31,0.12);
-    --trace:#0E8C73;
-    --trace-soft:rgba(14,140,115,0.12);
-    --line:rgba(20,24,27,0.18);
-    --line-soft:rgba(20,24,27,0.09);
-    --paper-shadow:0 18px 50px rgba(20,24,27,0.14);
+    --bg:#07060D;
+    --bg-2:#0C0A18;
+    --ink:#EDEBFA;
+    --ink-soft:#A9A4C9;
+    --ink-mute:#6E688F;
+    --violet:#8B5CF6;
+    --cyan:#22D3EE;
+    --pink:#F472B6;
+    --glass:rgba(255,255,255,0.045);
+    --glass-line:rgba(255,255,255,0.10);
+    --glass-line-strong:rgba(255,255,255,0.18);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
     background:var(--bg);color:var(--ink);
-    font-family:"Inter",sans-serif;font-size:16px;line-height:1.55;
+    font-family:"Inter",sans-serif;font-size:16px;line-height:1.6;
     -webkit-font-smoothing:antialiased;overflow-x:hidden;
+    cursor:auto;
   }
-  .display{font-family:"Big Shoulders Display",sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:-0.01em;line-height:0.92}
-  .mono{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase}
-  *:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+  .display{font-family:"Space Grotesk",sans-serif;letter-spacing:-0.02em;line-height:0.98}
+  .mono{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase}
+  a{color:inherit}
+  *:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
 
-  .wrap{max-width:1240px;margin:0 auto;padding:0 44px}
-  @media (max-width:760px){.wrap{padding:0 20px}}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 40px;position:relative;z-index:2}
+  @media (max-width:760px){.wrap{padding:0 22px}}
 
-  /* ====================== TOPBAR ====================== */
-  .topbar{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--line)}
-  .topbar .inner{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:20px}
-  .word{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:14px;letter-spacing:0.04em;color:var(--ink);display:flex;align-items:center;gap:8px}
-  .word .cursor{display:inline-block;width:8px;height:14px;background:var(--signal);animation:blink 1.1s steps(1) infinite}
-  @keyframes blink{50%{opacity:0}}
-  .nav-links{display:flex;gap:26px}
-  .nav-links a{color:var(--ink-soft);text-decoration:none;font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;transition:color 160ms}
-  .nav-links a:hover{color:var(--ink)}
-  @media (max-width:700px){.nav-links{display:none}}
-  .status-pill{display:flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft)}
-  .status-pill .led{width:7px;height:7px;border-radius:50%;background:var(--trace);box-shadow:0 0 0 0 rgba(14,140,115,0.5);animation:pulse 2.4s ease-out infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(14,140,115,0.55)}70%{box-shadow:0 0 0 9px rgba(14,140,115,0)}100%{box-shadow:0 0 0 0 rgba(14,140,115,0)}}
+  /* ====== BACKDROP LAYERS ====== */
+  #aurora{position:fixed;inset:0;z-index:0;pointer-events:none}
+  #field{position:fixed;inset:0;z-index:1;pointer-events:none}
+  .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% -10%, transparent 40%, rgba(7,6,13,0.55) 100%);}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.04;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 
-  /* ====================== HERO ====================== */
-  .hero{padding:56px 0 0}
-  .hero-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:30px}
-  .rec{display:flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--signal)}
-  .rec .dot{width:7px;height:7px;border-radius:50%;background:var(--signal);animation:pulse2 1.6s ease-in-out infinite}
-  @keyframes pulse2{0%,100%{opacity:1}50%{opacity:0.25}}
+  /* ====== GLOW CURSOR ====== */
+  .glow-cursor{position:fixed;top:0;left:0;width:380px;height:380px;border-radius:50%;z-index:1;pointer-events:none;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(139,92,246,0.16), rgba(34,211,238,0.06) 40%, transparent 68%);
+    transition:opacity 400ms ease;opacity:0;will-change:transform}
+  @media (hover:hover) and (pointer:fine){.glow-cursor{opacity:1}}
 
-  .headline{
-    font-size:clamp(52px,9.6vw,128px);
-    color:var(--ink);
+  /* ====== NAV ====== */
+  nav{position:fixed;top:0;left:0;right:0;z-index:40;
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    background:linear-gradient(to bottom, rgba(7,6,13,0.6), rgba(7,6,13,0));
   }
-  .headline .ln2{color:var(--ink)}
-  .headline .accent{color:var(--signal)}
+  nav .inner{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;gap:24px;max-width:1180px;margin:0 auto}
+  @media (max-width:760px){nav .inner{padding:16px 22px}}
+  nav .brand{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:18px;letter-spacing:0.04em;
+    background:linear-gradient(90deg,var(--violet),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  nav .links{display:flex;gap:28px}
+  nav .links a{color:var(--ink-soft);text-decoration:none;font-size:13px;letter-spacing:0.03em;transition:color 200ms}
+  nav .links a:hover{color:var(--ink)}
+  @media (max-width:680px){nav .links{display:none}}
+  nav .live{display:flex;align-items:center;gap:8px;color:var(--ink-soft);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase}
+  nav .live .d{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:beat 2s ease-in-out infinite}
+  @keyframes beat{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
 
-  .scope{
-    margin-top:34px;width:100%;
-    height:clamp(86px,13vw,150px);
-    background:var(--bg-deep);
-    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-    position:relative;
+  /* ====== HERO ====== */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:120px 0 80px}
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:12px;margin-bottom:30px;
+    align-self:flex-start;padding:8px 16px;border:1px solid var(--glass-line);border-radius:999px;
+    background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .hero .eyebrow .mono{color:var(--ink-soft)}
+  .hero .eyebrow .spark{width:6px;height:6px;border-radius:50%;background:var(--pink);box-shadow:0 0 10px var(--pink)}
+
+  .hero h1{
+    font-family:"Space Grotesk",sans-serif;font-weight:700;
+    font-size:clamp(70px,16vw,220px);line-height:0.86;letter-spacing:-0.04em;
+    margin-bottom:8px;position:relative;
   }
-  .scope canvas{display:block;width:100%;height:100%}
-  .scope .scope-label{position:absolute;top:8px;left:0;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:0.1em;color:var(--ink-mute);text-transform:uppercase}
-  @media (max-width:760px){.scope .scope-label{left:0;padding-left:20px}}
-  .scope .scope-label{padding-left:44px}
-
-  .hero-sub{padding:28px 0 36px;display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:start}
-  @media (max-width:820px){.hero-sub{grid-template-columns:1fr;gap:18px}}
-  .hero-sub p{font-size:17px;color:var(--ink-soft);max-width:46ch}
-  .hero-jump{display:flex;flex-direction:column;gap:6px}
-  .hero-jump a{color:var(--ink);text-decoration:none;font-family:"JetBrains Mono",monospace;font-size:12.5px;letter-spacing:0.04em;display:flex;align-items:center;gap:8px;transition:gap 160ms ease, color 160ms ease}
-  .hero-jump a:hover{gap:12px;color:var(--signal)}
-
-  /* ====================== MODULE PLATE / SHELL ====================== */
-  .module{border-top:1px solid var(--line);padding:64px 0 78px}
-  .module.alt{background:var(--bg-deep)}
-  .plate{display:flex;align-items:baseline;gap:16px;margin-bottom:40px;flex-wrap:wrap}
-  .plate-num{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:0.08em;color:var(--signal);font-weight:600}
-  .plate-name{
-    font-family:"Big Shoulders Display",sans-serif;font-weight:800;text-transform:uppercase;
-    font-size:clamp(28px,3.4vw,42px);letter-spacing:-0.01em;color:var(--ink);
+  .hero h1 .shimmer{
+    background:linear-gradient(100deg, #EDEBFA 10%, var(--violet) 38%, var(--cyan) 56%, var(--pink) 74%, #EDEBFA 92%);
+    background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:sheen 7s linear infinite;
   }
-  .plate-line{flex:1;height:1px;background:var(--line);min-width:40px}
+  @keyframes sheen{to{background-position:220% center}}
+  .hero .sub-line{font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:clamp(20px,3.4vw,40px);color:var(--ink);letter-spacing:-0.01em;margin-top:10px;max-width:20ch}
+  .hero .sub-line em{font-style:normal;color:transparent;background:linear-gradient(90deg,var(--violet),var(--cyan));-webkit-background-clip:text;background-clip:text}
 
-  /* ====================== MODULE 01 — ABOUT ====================== */
-  .about-wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:start}
-  @media (max-width:880px){.about-wrap{grid-template-columns:1fr;gap:30px}}
-  .about-text p{font-size:clamp(18px,1.8vw,22px);line-height:1.5;color:var(--ink);max-width:48ch}
-  .about-text p + p{margin-top:16px}
-  .about-text strong{font-weight:600}
-  .readout{border:1px solid var(--line);background:var(--bg)}
-  .module.alt .readout{background:var(--bg)}
-  .readout .head{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-mute);padding:12px 16px;border-bottom:1px solid var(--line-soft)}
-  .readout .row{display:flex;justify-content:space-between;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line-soft);font-family:"JetBrains Mono",monospace;font-size:12.5px}
-  .readout .row:last-child{border-bottom:0}
-  .readout .k{color:var(--ink-mute);letter-spacing:0.04em}
-  .readout .v{color:var(--ink);text-align:right}
+  .hero .lede{margin-top:34px;max-width:52ch;color:var(--ink-soft);font-size:17px}
+  .hero .cta-row{margin-top:42px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  .btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;
+    text-decoration:none;font-size:14.5px;font-weight:500;letter-spacing:0.01em;cursor:pointer;border:none;
+    transition:transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms ease}
+  .btn-primary{color:#0A0814;background:linear-gradient(90deg,var(--violet),var(--cyan));
+    box-shadow:0 8px 30px rgba(139,92,246,0.4)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 44px rgba(34,211,238,0.45)}
+  .btn-ghost{color:var(--ink);background:var(--glass);border:1px solid var(--glass-line);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .btn-ghost:hover{border-color:var(--glass-line-strong);transform:translateY(-2px)}
+  .btn .ar{transition:transform 220ms ease}
+  .btn:hover .ar{transform:translate(3px,-3px)}
 
-  /* ====================== MODULE 02 — WORK ====================== */
-  .work-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
-  @media (max-width:920px){.work-grid{grid-template-columns:repeat(2,1fr)}}
-  @media (max-width:560px){.work-grid{grid-template-columns:1fr}}
+  .scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ink-mute)}
+  .scroll-cue .mono{font-size:10px}
+  .scroll-cue .rail{width:1px;height:46px;background:linear-gradient(to bottom,var(--ink-mute),transparent);position:relative;overflow:hidden}
+  .scroll-cue .rail::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--cyan);animation:drop 2.2s ease-in-out infinite}
+  @keyframes drop{0%{top:-50%}70%{top:100%}100%{top:100%}}
 
-  .case{
-    grid-column:span 6;display:grid;grid-template-columns:1fr 1.3fr;gap:0;
-    border:1px solid var(--ink);background:var(--bg);
-    min-height:380px;
-  }
-  @media (max-width:880px){.case{grid-template-columns:1fr;min-height:auto}}
-  .case-visual{
-    background:var(--bg-deep);border-right:1px solid var(--ink);
-    display:flex;align-items:center;justify-content:center;position:relative;min-height:280px;
-  }
-  @media (max-width:880px){.case-visual{border-right:0;border-bottom:1px solid var(--ink)}}
-  .case-body{padding:34px;display:flex;flex-direction:column;gap:16px}
-  .case-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-  .chip{display:inline-flex;align-items:center;gap:7px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;padding:5px 10px;border:1px solid var(--trace);color:var(--trace)}
-  .chip .d{width:6px;height:6px;border-radius:50%;background:var(--trace)}
-  .slot-id{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-mute)}
-  .case-title{font-family:"Big Shoulders Display",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(30px,3.6vw,46px);letter-spacing:-0.01em;color:var(--ink)}
-  .case-sub{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-mute);letter-spacing:0.02em}
-  .case-desc{color:var(--ink-soft);font-size:15.5px;line-height:1.55;max-width:46ch}
-  .case-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
-  .tag{padding:5px 10px;border:1px solid var(--line);font-size:11px;color:var(--ink-soft);letter-spacing:0.03em;font-family:"JetBrains Mono",monospace}
-  .case-cta{margin-top:auto;display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-family:"JetBrains Mono",monospace;font-size:13px;letter-spacing:0.04em;border-top:1px solid var(--line);padding-top:16px;transition:color 160ms, gap 160ms}
-  .case-cta:hover{color:var(--signal);gap:14px}
+  /* ====== SECTION SHELL ====== */
+  section.block{padding:120px 0;position:relative}
+  .sec-head{display:flex;align-items:center;gap:18px;margin-bottom:54px}
+  .sec-head .idx{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--cyan);letter-spacing:0.1em}
+  .sec-head h2{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:clamp(30px,4.4vw,54px);letter-spacing:-0.02em}
+  .sec-head .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--glass-line),transparent)}
 
-  .slot{
-    grid-column:span 2;border:1px dashed var(--line);
-    background-image:repeating-linear-gradient(135deg, var(--line-soft) 0 1px, transparent 1px 13px);
-    min-height:220px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;
-  }
-  @media (max-width:920px){.slot{grid-column:span 1}}
-  .slot-top{display:flex;justify-content:space-between;align-items:center}
-  .slot-status{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-mute)}
-  .lock{width:18px;height:18px;color:var(--ink-mute)}
-  .slot-title{font-family:"Big Shoulders Display",sans-serif;font-weight:700;text-transform:uppercase;font-size:21px;line-height:1.05;color:var(--ink-mute);letter-spacing:-0.005em}
-  .slot-hint{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-mute);max-width:26ch}
+  /* glass card base */
+  .glass{background:var(--glass);border:1px solid var(--glass-line);border-radius:22px;
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);position:relative;overflow:hidden}
+  .glass::before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;pointer-events:none;
+    background:linear-gradient(120deg,rgba(139,92,246,0.5),transparent 30%,transparent 70%,rgba(34,211,238,0.4));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:0.6}
 
-  .open-slot{
-    grid-column:span 6;border:1px solid var(--signal);background:var(--signal-soft);
-    padding:26px 30px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
-  }
-  .open-slot .l{display:flex;flex-direction:column;gap:4px}
-  .open-slot .slot-id{color:var(--signal)}
-  .open-slot .open-title{font-family:"Big Shoulders Display",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(22px,2.6vw,32px);color:var(--ink)}
-  .open-cta{display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-family:"JetBrains Mono",monospace;font-size:13px;letter-spacing:0.04em;border-bottom:1px solid var(--ink)}
-  .open-cta:hover{color:var(--signal);border-color:var(--signal)}
+  /* ====== ABOUT ====== */
+  .about{display:grid;grid-template-columns:1.2fr 0.9fr;gap:28px}
+  @media (max-width:860px){.about{grid-template-columns:1fr}}
+  .about .lead{padding:40px}
+  .about .lead p{font-size:clamp(18px,2vw,23px);line-height:1.5;color:var(--ink)}
+  .about .lead p + p{margin-top:18px}
+  .about .lead strong{font-weight:600;color:#fff}
+  .about .stats{padding:32px;display:flex;flex-direction:column;gap:0}
+  .about .stats .row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--glass-line)}
+  .about .stats .row:last-child{border-bottom:0}
+  .about .stats .k{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.06em;color:var(--ink-mute);text-transform:uppercase}
+  .about .stats .v{font-size:14px;color:var(--ink);text-align:right;font-weight:500}
+  .about .stats .v.glow{color:var(--cyan)}
 
-  /* ====================== MODULE 03 — SERVICES ====================== */
-  .mods-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
-  @media (max-width:760px){.mods-grid{grid-template-columns:1fr}}
-  .mod-card{background:var(--bg);padding:30px 28px;display:flex;flex-direction:column;gap:12px;transition:background 180ms}
-  .module.alt .mod-card{background:var(--bg-deep)}
-  .mod-card:hover{background:var(--panel)}
-  .mod-top{display:flex;align-items:center;gap:10px}
-  .led{width:9px;height:9px;border-radius:50%;flex:none}
-  .led.on{background:var(--trace)}
-  .mod-spec{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-mute)}
-  .mod-title{font-family:"Big Shoulders Display",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(22px,2.4vw,30px);letter-spacing:-0.005em;color:var(--ink)}
-  .mod-desc{color:var(--ink-soft);font-size:15px;line-height:1.55;max-width:40ch}
-  .mod-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  /* ====== WORK ====== */
+  .featured{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;min-height:440px;transform-style:preserve-3d;transition:transform 300ms ease}
+  @media (max-width:860px){.featured{grid-template-columns:1fr}}
+  .featured .vis{position:relative;border-right:1px solid var(--glass-line);overflow:hidden;min-height:320px;display:flex;align-items:center;justify-content:center}
+  @media (max-width:860px){.featured .vis{border-right:0;border-bottom:1px solid var(--glass-line)}}
+  .featured .vis canvas{position:absolute;inset:0;width:100%;height:100%}
+  .featured .vis .orb-label{position:absolute;bottom:16px;left:20px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:0.12em;color:var(--ink-mute);text-transform:uppercase}
+  .featured .meta{padding:44px;display:flex;flex-direction:column;gap:18px}
+  .featured .tagrow{display:flex;justify-content:space-between;align-items:center}
+  .badge-live{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--cyan)}
+  .badge-live .d{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+  .featured .num{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-mute)}
+  .featured h3{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:clamp(34px,4.4vw,54px);letter-spacing:-0.02em}
+  .featured .role{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-mute);letter-spacing:0.02em}
+  .featured p.desc{color:var(--ink-soft);font-size:15.5px;line-height:1.55;max-width:46ch}
+  .featured .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{padding:6px 12px;border:1px solid var(--glass-line);border-radius:999px;font-size:11px;color:var(--ink-soft);font-family:"JetBrains Mono",monospace;letter-spacing:0.04em}
+  .featured .open{margin-top:auto;display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-size:14px;border-top:1px solid var(--glass-line);padding-top:18px;transition:gap 200ms,color 200ms}
+  .featured .open:hover{gap:14px;color:var(--cyan)}
 
-  /* ====================== MODULE 04 — CHANNEL ====================== */
-  .channel-pitch{font-family:"Big Shoulders Display",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(34px,5vw,64px);letter-spacing:-0.01em;color:var(--ink);max-width:16ch;margin-bottom:40px}
-  .channel-pitch .accent{color:var(--signal)}
-  .channel-list{border-top:1px solid var(--ink)}
-  .channel-item{display:flex;align-items:center;gap:20px;padding:22px 0;border-bottom:1px solid var(--ink);text-decoration:none;color:var(--ink);transition:padding 160ms ease, color 160ms ease}
-  .channel-item:hover{padding-left:12px;color:var(--signal)}
-  .ch-idx{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-mute);width:54px;flex:none}
-  .channel-item:hover .ch-idx{color:var(--signal)}
-  .ch-label{font-family:"Big Shoulders Display",sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(20px,2.4vw,28px);letter-spacing:-0.005em;flex:1}
-  .ch-val{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--ink-mute)}
-  .channel-item:hover .ch-val{color:var(--signal)}
-  .ch-ar{font-family:"JetBrains Mono",monospace;font-size:16px;color:var(--ink-mute)}
-  .channel-item:hover .ch-ar{color:var(--signal)}
+  .soon-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}
+  @media (max-width:760px){.soon-row{grid-template-columns:1fr}}
+  .soon{padding:26px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between;border-style:dashed}
+  .soon .top{display:flex;justify-content:space-between;align-items:center;color:var(--ink-mute)}
+  .soon .mono{color:var(--ink-mute)}
+  .soon h4{font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:19px;color:var(--ink-soft);letter-spacing:-0.01em}
+  .soon span.hint{font-size:12px;color:var(--ink-mute);font-family:"JetBrains Mono",monospace}
+  .soon .dot-ic{width:18px;height:18px;opacity:0.5}
 
-  /* ====================== FOOTER ====================== */
-  .ticks{height:14px;background-image:repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 14px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  footer{padding:26px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-  footer .l{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:0.04em;color:var(--ink-soft)}
-  footer .r{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:0.04em;color:var(--ink-mute)}
+  .open-slot{margin-top:20px;padding:28px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+    background:linear-gradient(100deg,rgba(139,92,246,0.14),rgba(34,211,238,0.10));border:1px solid var(--glass-line-strong)}
+  .open-slot .t{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:clamp(20px,2.4vw,28px)}
+  .open-slot .s{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--cyan);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;display:block}
+  .open-slot a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#0A0814;background:linear-gradient(90deg,var(--violet),var(--cyan));padding:12px 22px;border-radius:999px;font-size:14px;font-weight:500;transition:transform 200ms}
+  .open-slot a:hover{transform:translateY(-2px)}
 
-  .reveal{opacity:0;transform:translateY(18px);transition:opacity 760ms ease, transform 760ms ease}
+  /* ====== SERVICES ====== */
+  .svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  @media (max-width:760px){.svc-grid{grid-template-columns:1fr}}
+  .svc{padding:34px;min-height:210px;display:flex;flex-direction:column;gap:14px;transition:transform 260ms ease}
+  .svc:hover{transform:translateY(-4px)}
+  .svc .ic{width:44px;height:44px;color:var(--cyan)}
+  .svc h3{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:24px;letter-spacing:-0.01em}
+  .svc p{color:var(--ink-soft);font-size:14.5px;line-height:1.55;max-width:38ch}
+  .svc .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
+
+  /* ====== CONTACT ====== */
+  .contact-pitch{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:clamp(34px,6vw,76px);letter-spacing:-0.025em;line-height:0.98;max-width:16ch;margin-bottom:44px}
+  .contact-pitch em{font-style:normal;background:linear-gradient(90deg,var(--violet),var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ch-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media (max-width:680px){.ch-list{grid-template-columns:1fr}}
+  .ch{padding:24px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;text-decoration:none;color:var(--ink);transition:transform 220ms,border-color 220ms}
+  .ch:hover{transform:translateY(-3px)}
+  .ch .l{display:flex;flex-direction:column;gap:3px}
+  .ch .l .name{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:20px}
+  .ch .l .val{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-mute)}
+  .ch .ar{font-size:18px;color:var(--ink-mute);transition:color 220ms,transform 220ms}
+  .ch:hover .ar{color:var(--cyan);transform:translate(3px,-3px)}
+
+  /* ====== FOOTER ====== */
+  footer{padding:40px 0 56px;border-top:1px solid var(--glass-line);position:relative;z-index:2}
+  footer .inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+  footer .l{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:16px;
+    background:linear-gradient(90deg,var(--violet),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  footer .r{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-mute);letter-spacing:0.04em}
+
+  /* ====== REVEAL ====== */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity 900ms cubic-bezier(.2,.8,.2,1),transform 900ms cubic-bezier(.2,.8,.2,1)}
   .reveal.in{opacity:1;transform:none}
-  @media (prefers-reduced-motion: reduce){
+  @media (prefers-reduced-motion:reduce){
     .reveal{opacity:1;transform:none;transition:none}
-    .status-pill .led, .rec .dot, .word .cursor{animation:none}
+    .hero h1 .shimmer{animation:none}
+    .scroll-cue .rail::after,.nav .live .d{animation:none}
   }
 
-  ::selection{background:var(--signal);color:var(--bg)}
+  ::selection{background:var(--violet);color:#fff}
 
   /* =========================================================
      ====================  CHAT WIDGET  =======================
      ========================================================= */
-  .chat-toggle{
-    position:fixed;bottom:22px;right:22px;z-index:90;
-    display:inline-flex;align-items:center;gap:9px;
-    padding:13px 18px;border:none;cursor:pointer;border-radius:3px;
-    background:var(--ink);color:var(--bg);
-    font-family:"JetBrains Mono",monospace;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;
-    box-shadow:var(--paper-shadow);
-    transition:transform 180ms ease, background 180ms ease;
-  }
-  .chat-toggle:hover{transform:translateY(-2px);background:#000}
-  .chat-toggle .dot{width:7px;height:7px;border-radius:50%;background:var(--signal);flex:none;animation:pulse2 1.6s ease-in-out infinite}
-  .chat-toggle .badge{
-    position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:999px;
-    background:var(--signal);color:#fff;font-size:10px;font-weight:700;
-    display:flex;align-items:center;justify-content:center;padding:0 4px;font-family:"JetBrains Mono",monospace;
-  }
-  @media (max-width:480px){.chat-toggle{bottom:16px;right:16px;padding:11px 15px;font-size:11.5px}}
+  .chat-toggle{position:fixed;bottom:24px;right:24px;z-index:90;display:inline-flex;align-items:center;gap:10px;
+    padding:14px 20px;border:1px solid var(--glass-line-strong);cursor:pointer;border-radius:999px;
+    background:rgba(12,10,24,0.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--ink);
+    font-family:"Inter";font-size:13.5px;letter-spacing:0.01em;box-shadow:0 10px 40px rgba(139,92,246,0.3);
+    transition:transform 200ms ease, box-shadow 200ms ease}
+  .chat-toggle:hover{transform:translateY(-2px);box-shadow:0 14px 50px rgba(34,211,238,0.4)}
+  .chat-toggle .dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);flex:none;animation:beat 2s ease-in-out infinite}
+  .chat-toggle .badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:999px;
+    background:var(--pink);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;font-family:"JetBrains Mono",monospace}
+  @media (max-width:480px){.chat-toggle{bottom:16px;right:16px;padding:12px 16px;font-size:12.5px}}
 
-  .chat-panel{
-    position:fixed;bottom:84px;right:22px;z-index:91;
-    width:380px;max-width:calc(100vw - 32px);height:560px;max-height:70vh;
-    background:var(--bg);color:var(--ink);border:1px solid var(--ink);
-    overflow:hidden;display:flex;flex-direction:column;
-    box-shadow:var(--paper-shadow);
-    transform:translateY(14px) scale(0.98);opacity:0;pointer-events:none;
-    transition:transform 200ms ease, opacity 200ms ease;
-  }
+  .chat-panel{position:fixed;bottom:90px;right:24px;z-index:91;width:384px;max-width:calc(100vw - 32px);height:564px;max-height:72vh;
+    background:rgba(10,9,20,0.86);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    border:1px solid var(--glass-line-strong);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
+    box-shadow:0 30px 80px rgba(0,0,0,0.6);
+    transform:translateY(16px) scale(0.98);opacity:0;pointer-events:none;
+    transition:transform 240ms cubic-bezier(.2,.8,.2,1), opacity 240ms ease}
   .chat-panel.open{transform:none;opacity:1;pointer-events:auto}
-  @media (max-width:480px){.chat-panel{bottom:76px;right:16px;height:65vh}}
+  @media (max-width:480px){.chat-panel{bottom:80px;right:16px;height:66vh}}
 
-  .chat-head{background:var(--ink);color:var(--bg);padding:16px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex:none}
+  .chat-head{padding:18px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex:none;
+    background:linear-gradient(120deg,rgba(139,92,246,0.22),rgba(34,211,238,0.14));border-bottom:1px solid var(--glass-line)}
   .chat-head .ttl{display:flex;align-items:center;gap:10px}
-  .chat-head .ttl .back{cursor:pointer;color:var(--ink-mute);font-size:16px;line-height:1;background:none;border:none;padding:2px;font-family:"JetBrains Mono",monospace}
-  .chat-head .ttl .back:hover{color:var(--signal)}
-  .chat-head .ttl h4{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase}
-  .chat-head .ttl .sub{font-size:10.5px;color:var(--ink-mute);font-family:"JetBrains Mono",monospace;letter-spacing:0.04em}
+  .chat-head .ttl .back{cursor:pointer;color:var(--ink-soft);font-size:18px;line-height:1;background:none;border:none;padding:2px}
+  .chat-head .ttl .back:hover{color:var(--cyan)}
+  .chat-head .ttl h4{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15px;letter-spacing:-0.01em}
+  .chat-head .ttl .sub{font-size:11px;color:var(--ink-soft);font-family:"JetBrains Mono",monospace;letter-spacing:0.03em}
   .chat-head .acts{display:flex;align-items:center;gap:12px}
-  .chat-head button.icon{background:none;border:none;cursor:pointer;color:var(--ink-mute);font-size:12px;font-family:"JetBrains Mono",monospace;letter-spacing:0.04em;text-transform:uppercase}
-  .chat-head button.icon:hover{color:var(--signal)}
+  .chat-head button.icon{background:none;border:none;cursor:pointer;color:var(--ink-soft);font-size:12.5px;font-family:"Inter"}
+  .chat-head button.icon:hover{color:var(--cyan)}
 
-  .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+  .chat-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
   .chat-body::-webkit-scrollbar{width:6px}
-  .chat-body::-webkit-scrollbar-thumb{background:var(--panel);border-radius:6px}
+  .chat-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:6px}
 
   .chat-empty{margin:auto;text-align:center;color:var(--ink-soft);display:flex;flex-direction:column;gap:12px;align-items:center;padding:18px;width:100%}
   .chat-empty p{font-size:13.5px;max-width:26ch;line-height:1.5}
-  .chat-login-input{
-    width:100%;max-width:240px;border:1px solid var(--line);border-radius:3px;
-    padding:10px 12px;font-family:"Inter";font-size:13.5px;background:#fff;color:var(--ink);
-  }
-  .chat-login-input:focus{outline:2px solid var(--signal);outline-offset:1px}
-  .login-err{font-size:12px;color:var(--signal);min-height:14px;font-family:"JetBrains Mono",monospace}
-  .g-btn{
-    display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:var(--bg);border:none;border-radius:3px;
-    padding:11px 20px;font-size:13px;cursor:pointer;font-family:"JetBrains Mono",monospace;letter-spacing:0.05em;text-transform:uppercase;font-weight:600;
-    transition:background 180ms ease;
-  }
-  .g-btn:hover{background:var(--signal)}
+  .chat-login-input{width:100%;max-width:248px;border:1px solid var(--glass-line);border-radius:12px;
+    padding:11px 13px;font-family:"Inter";font-size:13.5px;background:rgba(255,255,255,0.04);color:var(--ink)}
+  .chat-login-input::placeholder{color:var(--ink-mute)}
+  .chat-login-input:focus{outline:2px solid var(--cyan);outline-offset:1px}
+  .login-err{font-size:12px;color:var(--pink);min-height:14px;font-family:"JetBrains Mono",monospace}
+  .g-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(90deg,var(--violet),var(--cyan));color:#0A0814;border:none;border-radius:999px;
+    padding:12px 22px;font-size:13.5px;cursor:pointer;font-family:"Inter";font-weight:600;transition:transform 180ms ease}
+  .g-btn:hover{transform:translateY(-2px)}
   .chat-empty .note{font-size:10.5px;color:var(--ink-mute);font-family:"JetBrains Mono",monospace}
 
-  .chat-msg{max-width:78%;padding:10px 13px;border-radius:3px;font-size:14px;line-height:1.45;position:relative}
-  .chat-msg .t{display:block;margin-top:4px;font-size:10px;opacity:0.6;font-family:"JetBrains Mono",monospace}
-  .chat-msg.theirs{align-self:flex-start;background:var(--panel);color:var(--ink)}
-  .chat-msg.mine{align-self:flex-end;background:var(--ink);color:var(--bg)}
+  .chat-msg{max-width:78%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.45;position:relative}
+  .chat-msg .t{display:block;margin-top:4px;font-size:10px;opacity:0.55;font-family:"JetBrains Mono",monospace}
+  .chat-msg.theirs{align-self:flex-start;background:rgba(255,255,255,0.07);color:var(--ink);border-bottom-left-radius:4px}
+  .chat-msg.mine{align-self:flex-end;background:linear-gradient(120deg,var(--violet),var(--cyan));color:#0A0814;border-bottom-right-radius:4px}
 
-  .chat-foot{flex:none;border-top:1px solid var(--line);background:var(--bg);padding:12px;display:flex;gap:8px;align-items:flex-end}
-  .chat-foot textarea{
-    flex:1;resize:none;border:1px solid var(--line);border-radius:3px;
-    padding:10px 12px;font-family:"Inter";font-size:14px;background:#fff;color:var(--ink);
-    max-height:90px;min-height:40px;line-height:1.4;
-  }
-  .chat-foot textarea:focus{outline:2px solid var(--signal);outline-offset:1px}
-  .chat-foot button{
-    background:var(--ink);color:var(--bg);border:none;border-radius:3px;
-    padding:0 16px;height:40px;font-size:14px;cursor:pointer;font-family:"JetBrains Mono",monospace;
-    transition:background 180ms ease;flex:none;
-  }
-  .chat-foot button:hover{background:var(--signal)}
+  .chat-foot{flex:none;border-top:1px solid var(--glass-line);padding:12px;display:flex;gap:8px;align-items:flex-end}
+  .chat-foot textarea{flex:1;resize:none;border:1px solid var(--glass-line);border-radius:12px;
+    padding:10px 12px;font-family:"Inter";font-size:14px;background:rgba(255,255,255,0.04);color:var(--ink);max-height:90px;min-height:42px;line-height:1.4}
+  .chat-foot textarea::placeholder{color:var(--ink-mute)}
+  .chat-foot textarea:focus{outline:2px solid var(--cyan);outline-offset:1px}
+  .chat-foot button{background:linear-gradient(120deg,var(--violet),var(--cyan));color:#0A0814;border:none;border-radius:12px;
+    padding:0 16px;height:42px;font-size:15px;cursor:pointer;font-family:"Inter";font-weight:600;transition:transform 180ms ease;flex:none}
+  .chat-foot button:hover{transform:translateY(-1px)}
 
-  .thread-item{display:flex;gap:12px;align-items:center;padding:12px 6px;cursor:pointer;transition:background 160ms ease}
-  .thread-item:hover{background:var(--panel)}
-  .thread-item .av{width:36px;height:36px;border-radius:3px;background:var(--ink);color:var(--bg);display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:13px;flex:none}
+  .thread-item{display:flex;gap:12px;align-items:center;padding:12px 6px;border-radius:12px;cursor:pointer;transition:background 160ms ease}
+  .thread-item:hover{background:rgba(255,255,255,0.05)}
+  .thread-item .av{width:38px;height:38px;border-radius:11px;background:linear-gradient(120deg,var(--violet),var(--cyan));color:#0A0814;display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk";font-weight:700;font-size:15px;flex:none}
   .thread-item .info{flex:1;min-width:0}
   .thread-item .info .nm{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
   .thread-item .info .pv{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:"JetBrains Mono",monospace}
-  .thread-item .unread{width:7px;height:7px;border-radius:50%;background:var(--signal);flex:none}
+  .thread-item .unread{width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink);flex:none}
 
   .chat-status-line{padding:10px 18px;font-size:12px;color:var(--ink-mute);text-align:center;font-family:"JetBrains Mono",monospace}
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="wrap inner">
-    <div class="word">SEMA<span class="cursor"></span></div>
-    <div class="nav-links">
+<canvas id="aurora"></canvas>
+<canvas id="field"></canvas>
+<div class="vignette"></div>
+<div class="grain"></div>
+<div class="glow-cursor" id="glowCursor"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="brand">SEMA</div>
+    <div class="links">
       <a href="#about">профиль</a>
-      <a href="#work">кейс</a>
-      <a href="#services">модули</a>
-      <a href="#channel">канал</a>
+      <a href="#work">работы</a>
+      <a href="#services">услуги</a>
+      <a href="#contact">контакты</a>
     </div>
-    <div class="status-pill"><span class="led"></span><span id="clockText">--:--</span> · открыт к заказам</div>
+    <div class="live"><span class="d"></span>открыт к заказам</div>
   </div>
-</div>
+</nav>
 
 <!-- HERO -->
 <header class="hero">
   <div class="wrap">
-    <div class="hero-top">
-      <span class="mono" style="color:var(--ink-mute)">портфолио · 2026</span>
-      <span class="rec"><span class="dot"></span>rec</span>
+    <div class="eyebrow">
+      <span class="spark"></span>
+      <span class="mono">фул-стек разработчик · 2026</span>
     </div>
-    <h1 class="headline display">
-      Делаю штуки,<br/>
-      которые<br/>
-      <span class="accent">работают.</span>
-    </h1>
-  </div>
-
-  <div class="scope" aria-hidden="true">
-    <span class="scope-label">CH1 / CH2 — сигнал в реальном времени</span>
-    <canvas id="scopeCanvas"></canvas>
-  </div>
-
-  <div class="wrap hero-sub">
-    <p>Сайты, веб-приложения, Telegram-боты и ИИ-интеграции — от первого экрана до продакшена. Один человек, без посредников и без агентского «передадим вашему менеджеру».</p>
-    <div class="hero-jump">
-      <a href="#about">→ профиль</a>
-      <a href="#work">→ кейс в продакшене</a>
-      <a href="#services">→ что делаю на заказ</a>
-      <a href="#channel">→ как связаться</a>
+    <h1 class="display"><span class="shimmer">SEMA</span></h1>
+    <div class="sub-line">Цифровые продукты, <em>собранные вручную.</em></div>
+    <p class="lede">Сайты, веб-приложения, Telegram-боты и ИИ-интеграции — от первого экрана до боевого деплоя. Один человек, который реально доводит до конца.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#work">Смотреть работы <span class="ar">↗</span></a>
+      <a class="btn btn-ghost" href="#contact">Связаться</a>
     </div>
+  </div>
+  <div class="scroll-cue">
+    <span class="mono">листай</span>
+    <span class="rail"></span>
   </div>
 </header>
 
-<!-- MODULE 01 — ABOUT -->
-<section class="module" id="about">
+<!-- ABOUT -->
+<section class="block" id="about">
   <div class="wrap">
-    <div class="plate reveal">
-      <span class="plate-num">MODULE — 01</span>
-      <span class="plate-name">Профиль</span>
-      <span class="plate-line"></span>
+    <div class="sec-head reveal">
+      <span class="idx">01</span>
+      <h2 class="display">Профиль</h2>
+      <span class="rule"></span>
     </div>
-
-    <div class="about-wrap reveal">
-      <div class="about-text">
-        <p>Я <strong>фул-стек разработчик</strong>. Беру задачу целиком: бриф, дизайн, код, деплой, поддержка после запуска — без передачи между отделами.</p>
-        <p>Работаю с теми, кому нужен сайт с настоящей логикой внутри: с бронированием, оплатой, личным кабинетом, ботом — со всем, что должно реально работать, а не просто красиво выглядеть на скриншоте.</p>
+    <div class="about">
+      <div class="glass lead reveal">
+        <p>Я <strong>фул-стек разработчик</strong>. Беру проект целиком: бриф, дизайн, код, деплой, поддержка — без передачи между отделами и без «это к менеджеру».</p>
+        <p>Делаю сайты с настоящей логикой внутри: бронирование, оплата, личный кабинет, бот. Всё, что должно работать после запуска, а не только красиво выглядеть на скриншоте.</p>
       </div>
-      <div class="readout">
-        <div class="head">sys.info</div>
-        <div class="row"><span class="k">стек</span><span class="v">Next.js · React · Firebase</span></div>
+      <div class="glass stats reveal">
+        <div class="row"><span class="k">стек</span><span class="v">Next · React · Firebase</span></div>
         <div class="row"><span class="k">платежи / боты</span><span class="v">Telegram Bot API</span></div>
         <div class="row"><span class="k">деплой</span><span class="v">Vercel · CI/CD</span></div>
         <div class="row"><span class="k">срок</span><span class="v">до 1 недели</span></div>
         <div class="row"><span class="k">языки</span><span class="v">RU · EN</span></div>
-        <div class="row"><span class="k">статус</span><span class="v" style="color:var(--trace)">online</span></div>
+        <div class="row"><span class="k">статус</span><span class="v glow">online</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- MODULE 02 — WORK -->
-<section class="module alt" id="work">
+<!-- WORK -->
+<section class="block" id="work">
   <div class="wrap">
-    <div class="plate reveal">
-      <span class="plate-num">MODULE — 02</span>
-      <span class="plate-name">Кейс</span>
-      <span class="plate-line"></span>
+    <div class="sec-head reveal">
+      <span class="idx">02</span>
+      <h2 class="display">Работы</h2>
+      <span class="rule"></span>
     </div>
 
-    <div class="work-grid reveal">
-
-      <!-- FEATURED CASE -->
-      <article class="case">
-        <div class="case-visual">
-          <svg viewBox="0 0 220 220" width="70%" height="70%" aria-hidden="true">
-            <g fill="none" stroke="#0E8C73" stroke-width="1">
-              <circle cx="110" cy="110" r="30"/>
-              <circle cx="110" cy="110" r="55"/>
-              <circle cx="110" cy="110" r="80"/>
-            </g>
-            <g stroke="#FF4B1F" stroke-width="1.4">
-              <line x1="110" y1="10" x2="110" y2="210"/>
-              <line x1="10" y1="110" x2="210" y2="110"/>
-            </g>
-            <circle cx="110" cy="110" r="4" fill="#FF4B1F"/>
-            <circle cx="110" cy="110" r="80" fill="none" stroke="#FF4B1F" stroke-width="1" stroke-dasharray="2 6">
-              <animateTransform attributeName="transform" type="rotate" from="0 110 110" to="360 110 110" dur="22s" repeatCount="indefinite"/>
-            </circle>
-          </svg>
-        </div>
-        <div class="case-body">
-          <div class="case-top">
-            <span class="chip"><span class="d"></span>сигнал получен</span>
-            <span class="slot-id">SLOT 01</span>
-          </div>
-          <div>
-            <h3 class="case-title">СВЕТлица</h3>
-            <p class="case-sub">студия йоги и танца · полностью завершено</p>
-          </div>
-          <p class="case-desc">Сайт студии: расписание и бронь в реальном времени, мульти-админка для преподавателей, галерея и оплата занятий через Telegram-бота.</p>
-          <div class="case-tags">
-            <span class="tag">Next.js</span>
-            <span class="tag">Firebase</span>
-            <span class="tag">Telegram Bot</span>
-            <span class="tag">Vercel</span>
-          </div>
-          <a class="case-cta" href="https://cvetlica.vercel.app/" target="_blank" rel="noopener">открыть сайт →</a>
-        </div>
-      </article>
-
-      <!-- LOCKED SLOTS -->
-      <article class="slot">
-        <div class="slot-top">
-          <span class="slot-status">slot 02</span>
-          <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-            <rect x="5" y="11" width="14" height="9" rx="1"/>
-            <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
-          </svg>
+    <article class="glass featured reveal" id="featuredCard">
+      <div class="vis">
+        <canvas id="orbCanvas"></canvas>
+        <span class="orb-label">cvetlica · live signal</span>
+      </div>
+      <div class="meta">
+        <div class="tagrow">
+          <span class="badge-live"><span class="d"></span>в продакшене</span>
+          <span class="num">01 / 01</span>
         </div>
         <div>
-          <div class="slot-title">Лендинг</div>
-          <p class="slot-hint">доступ: в разработке</p>
+          <h3 class="display">СВЕТлица</h3>
+          <p class="role">студия йоги и танца · 2026</p>
         </div>
-      </article>
+        <p class="desc">Сайт студии: расписание и бронь в реальном времени, мульти-админка для преподавателей, галерея и оплата занятий через Telegram-бота. Полностью завершён.</p>
+        <div class="tags">
+          <span class="tag">Next.js</span><span class="tag">Firebase</span><span class="tag">Telegram Bot</span><span class="tag">Vercel</span>
+        </div>
+        <a class="open" href="https://cvetlica.vercel.app/" target="_blank" rel="noopener">открыть сайт <span class="ar">↗</span></a>
+      </div>
+    </article>
 
-      <article class="slot">
-        <div class="slot-top">
-          <span class="slot-status">slot 03</span>
-          <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-            <rect x="5" y="11" width="14" height="9" rx="1"/>
-            <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
-          </svg>
+    <div class="soon-row reveal">
+      <div class="glass soon">
+        <div class="top"><span class="mono">02</span>
+          <svg class="dot-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
         </div>
-        <div>
-          <div class="slot-title">Веб-приложение</div>
-          <p class="slot-hint">админка / личный кабинет</p>
+        <h4>Следующий лендинг</h4>
+        <span class="hint">на подходе</span>
+      </div>
+      <div class="glass soon">
+        <div class="top"><span class="mono">03</span>
+          <svg class="dot-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
         </div>
-      </article>
+        <h4>Веб-приложение</h4>
+        <span class="hint">админка / кабинет</span>
+      </div>
+      <div class="glass soon">
+        <div class="top"><span class="mono">04</span>
+          <svg class="dot-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        </div>
+        <h4>ИИ-интеграция</h4>
+        <span class="hint">бот / голосовой агент</span>
+      </div>
+    </div>
 
-      <article class="slot">
-        <div class="slot-top">
-          <span class="slot-status">slot 04</span>
-          <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-            <rect x="5" y="11" width="14" height="9" rx="1"/>
-            <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
-          </svg>
-        </div>
-        <div>
-          <div class="slot-title">ИИ-интеграция</div>
-          <p class="slot-hint">бот / голосовой агент</p>
-        </div>
-      </article>
-
-      <!-- OPEN SLOT CTA -->
-      <article class="open-slot">
-        <div class="l">
-          <span class="slot-id">SLOT 05 — СВОБОДЕН</span>
-          <span class="open-title">Здесь может быть твой проект</span>
-        </div>
-        <a class="open-cta" href="#channel">обсудить →</a>
-      </article>
-
+    <div class="glass open-slot reveal">
+      <div>
+        <span class="s">slot 05 — свободен</span>
+        <span class="t">Здесь может быть твой проект</span>
+      </div>
+      <a href="#contact">обсудить <span>↗</span></a>
     </div>
   </div>
 </section>
 
-<!-- MODULE 03 — SERVICES -->
-<section class="module" id="services">
+<!-- SERVICES -->
+<section class="block" id="services">
   <div class="wrap">
-    <div class="plate reveal">
-      <span class="plate-num">MODULE — 03</span>
-      <span class="plate-name">Модули на заказ</span>
-      <span class="plate-line"></span>
+    <div class="sec-head reveal">
+      <span class="idx">03</span>
+      <h2 class="display">Что делаю на заказ</h2>
+      <span class="rule"></span>
     </div>
-
-    <div class="mods-grid reveal">
-
-      <div class="mod-card">
-        <div class="mod-top"><span class="led on"></span><span class="mod-spec">срок: до 1 недели</span></div>
-        <h3 class="mod-title">Сайты под ключ</h3>
-        <p class="mod-desc">Лендинги, корпоративные сайты, многостраничники. От брифа до продакшена, с адаптивом и CMS, если нужно.</p>
-        <div class="mod-tags"><span class="tag">Next.js</span><span class="tag">Vercel</span></div>
+    <div class="svc-grid">
+      <div class="glass svc reveal">
+        <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="6" y="9" width="36" height="30" rx="3"/><line x1="6" y1="17" x2="42" y2="17"/><circle cx="11" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/></svg>
+        <h3>Сайты под ключ</h3>
+        <p>Лендинги, корпоративные сайты, многостраничники. От брифа до продакшена, с адаптивом и CMS, если нужно.</p>
+        <div class="tags"><span class="tag">Next.js</span><span class="tag">Vercel</span></div>
       </div>
-
-      <div class="mod-card">
-        <div class="mod-top"><span class="led on"></span><span class="mod-spec">стек: react · firebase</span></div>
-        <h3 class="mod-title">Веб-приложения</h3>
-        <p class="mod-desc">Личный кабинет, админка, дашборд, бронирование, каталог с корзиной. Реальная логика и база данных.</p>
-        <div class="mod-tags"><span class="tag">React</span><span class="tag">Firebase</span></div>
+      <div class="glass svc reveal">
+        <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="7" y="10" width="34" height="28" rx="3"/><path d="M14 24l5 5 11-11"/></svg>
+        <h3>Веб-приложения</h3>
+        <p>Личный кабинет, админка, дашборд, бронирование, каталог с корзиной. Реальная логика и база данных.</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">Firebase</span></div>
       </div>
-
-      <div class="mod-card">
-        <div class="mod-top"><span class="led on"></span><span class="mod-spec">канал: telegram</span></div>
-        <h3 class="mod-title">Telegram-боты</h3>
-        <p class="mod-desc">Оплата, нотификации, мини-аппы, заявки. Интегрируется с твоим сайтом и CRM, без конструкторов.</p>
-        <div class="mod-tags"><span class="tag">Bot API</span><span class="tag">Webhooks</span></div>
+      <div class="glass svc reveal">
+        <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 24l32-14-6 32-10-9-10 5z"/><line x1="18" y1="29" x2="34" y2="15"/></svg>
+        <h3>Telegram-боты</h3>
+        <p>Оплата, нотификации, мини-аппы, заявки. Интегрируется с твоим сайтом и CRM, без конструкторов.</p>
+        <div class="tags"><span class="tag">Bot API</span><span class="tag">Webhooks</span></div>
       </div>
-
-      <div class="mod-card">
-        <div class="mod-top"><span class="led on"></span><span class="mod-spec">модель: openai · ollama</span></div>
-        <h3 class="mod-title">ИИ-интеграции</h3>
-        <p class="mod-desc">Чат-ассистент с памятью, голосовой агент, авто-обработка заявок. Облачные и локальные модели.</p>
-        <div class="mod-tags"><span class="tag">OpenAI</span><span class="tag">Ollama</span></div>
+      <div class="glass svc reveal">
+        <svg class="ic" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="5"/><line x1="24" y1="10" x2="24" y2="4"/><line x1="24" y1="44" x2="24" y2="38"/></svg>
+        <h3>ИИ-интеграции</h3>
+        <p>Чат-ассистент с памятью, голосовой агент, авто-обработка заявок. Облачные и локальные модели.</p>
+        <div class="tags"><span class="tag">OpenAI</span><span class="tag">Ollama</span></div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- MODULE 04 — CHANNEL -->
-<section class="module alt" id="channel">
+<!-- CONTACT -->
+<section class="block" id="contact">
   <div class="wrap">
-    <div class="plate reveal">
-      <span class="plate-num">MODULE — 04</span>
-      <span class="plate-name">Канал связи</span>
-      <span class="plate-line"></span>
+    <div class="sec-head reveal">
+      <span class="idx">04</span>
+      <h2 class="display">Контакты</h2>
+      <span class="rule"></span>
     </div>
-
-    <div class="reveal">
-      <p class="channel-pitch">Если есть, что <span class="accent">собрать</span> — выходи на связь.</p>
-
-      <div class="channel-list">
-        <a class="channel-item" href="https://t.me/noname067067" target="_blank" rel="noopener">
-          <span class="ch-idx">CH 01</span>
-          <span class="ch-label">Telegram</span>
-          <span class="ch-val">@noname067067</span>
-          <span class="ch-ar">→</span>
-        </a>
-        <a class="channel-item" href="tel:+79930124390">
-          <span class="ch-idx">CH 02</span>
-          <span class="ch-label">Телефон</span>
-          <span class="ch-val">+7 993 012 43 90</span>
-          <span class="ch-ar">→</span>
-        </a>
-        <a class="channel-item" href="mailto:pisarev.se2010@gmail.com">
-          <span class="ch-idx">CH 03</span>
-          <span class="ch-label">Email</span>
-          <span class="ch-val">pisarev.se2010@gmail.com</span>
-          <span class="ch-ar">→</span>
-        </a>
-        <a class="channel-item" href="https://github.com/Noname424224" target="_blank" rel="noopener">
-          <span class="ch-idx">CH 04</span>
-          <span class="ch-label">GitHub</span>
-          <span class="ch-val">код, опенсорс</span>
-          <span class="ch-ar">→</span>
-        </a>
-      </div>
+    <p class="contact-pitch display reveal">Есть, что <em>собрать</em>?<br/>Напиши.</p>
+    <div class="ch-list reveal">
+      <a class="glass ch" href="https://t.me/noname067067" target="_blank" rel="noopener">
+        <div class="l"><span class="name">Telegram</span><span class="val">@noname067067</span></div><span class="ar">↗</span>
+      </a>
+      <a class="glass ch" href="tel:+79930124390">
+        <div class="l"><span class="name">Телефон</span><span class="val">+7 993 012 43 90</span></div><span class="ar">↗</span>
+      </a>
+      <a class="glass ch" href="mailto:pisarev.se2010@gmail.com">
+        <div class="l"><span class="name">Email</span><span class="val">pisarev.se2010@gmail.com</span></div><span class="ar">↗</span>
+      </a>
+      <a class="glass ch" href="https://github.com/Noname424224" target="_blank" rel="noopener">
+        <div class="l"><span class="name">GitHub</span><span class="val">код · опенсорс</span></div><span class="ar">↗</span>
+      </a>
     </div>
   </div>
 </section>
 
-<div class="ticks" aria-hidden="true"></div>
 <footer>
   <div class="wrap inner">
-    <div class="l">SEMA — портфолио</div>
-    <div class="r">© 2026 · сделано вручную</div>
+    <div class="l">SEMA</div>
+    <div class="r">© 2026 · собрано вручную</div>
   </div>
 </footer>
 
@@ -627,7 +554,6 @@
   };
 
   const ADMIN_EMAIL = "pisarev.se2010@gmail.com";
-
   const CHAT_CONFIGURED = firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("ВСТАВЬ");
 
   let app, auth, db;
@@ -638,64 +564,39 @@
     setPersistence(auth, browserLocalPersistence).catch((e) => console.error('persistence error', e));
   }
 
-  // ---------- DOM ----------
-  const toggleBtn   = document.getElementById('chatToggle');
-  const toggleLabel = document.getElementById('chatToggleLabel');
-  const badge       = document.getElementById('chatBadge');
-  const panel       = document.getElementById('chatPanel');
-  const closeBtn    = document.getElementById('chatClose');
-  const backBtn     = document.getElementById('chatBack');
-  const signoutBtn  = document.getElementById('chatSignout');
-  const titleEl     = document.getElementById('chatTitle');
-  const subEl       = document.getElementById('chatSub');
-  const bodyEl      = document.getElementById('chatBody');
-  const footEl      = document.getElementById('chatFoot');
-  const inputEl     = document.getElementById('chatInput');
-  const sendBtn     = document.getElementById('chatSend');
-  const configNote  = document.getElementById('chatConfigNote');
+  const toggleBtn = document.getElementById('chatToggle');
+  const badge = document.getElementById('chatBadge');
+  const panel = document.getElementById('chatPanel');
+  const closeBtn = document.getElementById('chatClose');
+  const backBtn = document.getElementById('chatBack');
+  const signoutBtn = document.getElementById('chatSignout');
+  const titleEl = document.getElementById('chatTitle');
+  const subEl = document.getElementById('chatSub');
+  const bodyEl = document.getElementById('chatBody');
+  const footEl = document.getElementById('chatFoot');
+  const inputEl = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSend');
+  const configNote = document.getElementById('chatConfigNote');
   const loginBtnInit = document.getElementById('chatLoginBtn');
 
-  let isOpen = false;
-  let currentUser = null;
-  let isAdmin = false;
-  let activeThreadId = null;
-  let unsubMessages = null;
-  let unsubThreads = null;
+  let isOpen = false, currentUser = null, isAdmin = false, activeThreadId = null, unsubMessages = null, unsubThreads = null;
 
   if (!CHAT_CONFIGURED) {
     configNote.style.display = 'block';
-    loginBtnInit.disabled = true;
-    loginBtnInit.style.opacity = '0.5';
-    loginBtnInit.style.cursor = 'default';
+    loginBtnInit.disabled = true; loginBtnInit.style.opacity = '0.5'; loginBtnInit.style.cursor = 'default';
   }
 
-  toggleBtn.addEventListener('click', () => {
-    isOpen = !isOpen;
-    panel.classList.toggle('open', isOpen);
-    if (isOpen) { badge.style.display = 'none'; }
-  });
+  toggleBtn.addEventListener('click', () => { isOpen = !isOpen; panel.classList.toggle('open', isOpen); if (isOpen) badge.style.display = 'none'; });
   closeBtn.addEventListener('click', () => { isOpen = false; panel.classList.remove('open'); });
-
   signoutBtn.addEventListener('click', () => signOut(auth));
-  backBtn.addEventListener('click', () => {
-    if (isAdmin) { detachMessages(); activeThreadId = null; renderAdminThreadList(); }
-  });
+  backBtn.addEventListener('click', () => { if (isAdmin) { detachMessages(); activeThreadId = null; renderAdminThreadList(); } });
 
-  inputEl.addEventListener('input', () => {
-    inputEl.style.height = 'auto';
-    inputEl.style.height = Math.min(inputEl.scrollHeight, 90) + 'px';
-  });
-  inputEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
+  inputEl.addEventListener('input', () => { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(inputEl.scrollHeight, 90) + 'px'; });
+  inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
   sendBtn.addEventListener('click', sendMessage);
 
-  bodyEl.addEventListener('click', (e) => {
-    if (e.target && e.target.id === 'chatLoginBtn') doEmailLogin();
-  });
-  bodyEl.addEventListener('keydown', (e) => {
-    if (e.target && e.target.id === 'loginPassword' && e.key === 'Enter') { e.preventDefault(); doEmailLogin(); }
-  });
+  bodyEl.addEventListener('click', (e) => { if (e.target && e.target.id === 'chatLoginBtn') doEmailLogin(); });
+  bodyEl.addEventListener('keydown', (e) => { if (e.target && e.target.id === 'loginPassword' && e.key === 'Enter') { e.preventDefault(); doEmailLogin(); } });
 
   async function doEmailLogin() {
     if (!CHAT_CONFIGURED) return;
@@ -708,27 +609,17 @@
     const email = emailInput.value.trim();
     const password = passInput.value;
     if (errEl) errEl.textContent = '';
-    if (!email || !password) {
-      if (errEl) errEl.textContent = 'Заполни почту и пароль.';
-      return;
-    }
-    if (password.length < 6) {
-      if (errEl) errEl.textContent = 'Пароль должен быть не короче 6 символов.';
-      return;
-    }
+    if (!email || !password) { if (errEl) errEl.textContent = 'Заполни почту и пароль.'; return; }
+    if (password.length < 6) { if (errEl) errEl.textContent = 'Пароль должен быть не короче 6 символов.'; return; }
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
-      console.log('[chat] signed in:', cred.user);
       isOpen = true; panel.classList.add('open');
     } catch (e1) {
-      console.log('[chat] sign-in failed, trying to create account:', e1.code);
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         if (name) { try { await updateProfile(cred.user, { displayName: name }); } catch (_) {} }
-        console.log('[chat] account created:', cred.user);
         isOpen = true; panel.classList.add('open');
       } catch (e2) {
-        console.error('[chat] create account failed:', e2);
         if (errEl) {
           if (e2.code === 'auth/email-already-in-use') errEl.textContent = 'Неверный пароль для этой почты.';
           else if (e2.code === 'auth/invalid-email') errEl.textContent = 'Проверь формат почты.';
@@ -739,13 +630,8 @@
     }
   }
 
-  function detachMessages() {
-    if (unsubMessages) { unsubMessages(); unsubMessages = null; }
-    bodyEl.innerHTML = '';
-  }
-  function detachThreads() {
-    if (unsubThreads) { unsubThreads(); unsubThreads = null; }
-  }
+  function detachMessages() { if (unsubMessages) { unsubMessages(); unsubMessages = null; } bodyEl.innerHTML = ''; }
+  function detachThreads() { if (unsubThreads) { unsubThreads(); unsubThreads = null; } }
 
   function loginFormHtml() {
     return `
@@ -761,13 +647,9 @@
   }
 
   function renderLoggedOut() {
-    detachMessages(); detachThreads();
-    activeThreadId = null;
-    backBtn.style.display = 'none';
-    signoutBtn.style.display = 'none';
-    footEl.style.display = 'none';
-    titleEl.textContent = 'Чат с Sema';
-    subEl.textContent = CHAT_CONFIGURED ? 'войди, чтобы написать' : 'скоро';
+    detachMessages(); detachThreads(); activeThreadId = null;
+    backBtn.style.display = 'none'; signoutBtn.style.display = 'none'; footEl.style.display = 'none';
+    titleEl.textContent = 'Чат с Sema'; subEl.textContent = CHAT_CONFIGURED ? 'войди, чтобы написать' : 'скоро';
     bodyEl.innerHTML = loginFormHtml();
   }
 
@@ -776,72 +658,43 @@
       currentUser = user;
       if (user) {
         isAdmin = user.email === ADMIN_EMAIL;
-        signoutBtn.style.display = 'inline-block';
-        footEl.style.display = 'flex';
-        if (isAdmin) { renderAdminThreadList(); }
-        else { renderVisitorChat(user); }
-      } else {
-        renderLoggedOut();
-      }
+        signoutBtn.style.display = 'inline-block'; footEl.style.display = 'flex';
+        if (isAdmin) renderAdminThreadList(); else renderVisitorChat(user);
+      } else renderLoggedOut();
     });
-  } else {
-    renderLoggedOut();
-  }
+  } else renderLoggedOut();
 
   function renderVisitorChat(user) {
-    backBtn.style.display = 'none';
-    titleEl.textContent = 'Чат с Sema';
-    subEl.textContent = 'обычно отвечаю в течение дня';
+    backBtn.style.display = 'none'; titleEl.textContent = 'Чат с Sema'; subEl.textContent = 'обычно отвечаю в течение дня';
     activeThreadId = user.uid;
-
-    const threadRef = doc(db, 'threads', user.uid);
-    setDoc(threadRef, {
-      visitorName: user.displayName || 'Гость',
-      visitorEmail: user.email || '',
-      visitorPhoto: user.photoURL || '',
-      updatedAt: serverTimestamp()
+    setDoc(doc(db, 'threads', user.uid), {
+      visitorName: user.displayName || 'Гость', visitorEmail: user.email || '', visitorPhoto: user.photoURL || '', updatedAt: serverTimestamp()
     }, { merge: true }).catch(console.error);
-
     bodyEl.innerHTML = '<div class="chat-status-line">загрузка…</div>';
     const msgsRef = query(collection(db, 'threads', user.uid, 'messages'), orderBy('createdAt', 'asc'));
     detachMessages();
     unsubMessages = onSnapshot(msgsRef, (snap) => {
       bodyEl.innerHTML = '';
-      if (snap.empty) {
-        bodyEl.innerHTML = '<div class="chat-status-line">Напиши первое сообщение — я отвечу.</div>';
-      }
+      if (snap.empty) bodyEl.innerHTML = '<div class="chat-status-line">Напиши первое сообщение — я отвечу.</div>';
       snap.forEach((d) => renderMsg(d.data()));
       bodyEl.scrollTop = bodyEl.scrollHeight;
     }, console.error);
   }
 
   function renderAdminThreadList() {
-    backBtn.style.display = 'none';
-    titleEl.textContent = 'Входящие';
-    subEl.textContent = 'все треды';
-    footEl.style.display = 'none';
-    detachMessages();
-    bodyEl.innerHTML = '<div class="chat-status-line">загрузка…</div>';
-
+    backBtn.style.display = 'none'; titleEl.textContent = 'Входящие'; subEl.textContent = 'все треды'; footEl.style.display = 'none';
+    detachMessages(); bodyEl.innerHTML = '<div class="chat-status-line">загрузка…</div>';
     const threadsRef = query(collection(db, 'threads'), orderBy('lastMessageAt', 'desc'));
     detachThreads();
     unsubThreads = onSnapshot(threadsRef, (snap) => {
-      if (snap.empty) {
-        bodyEl.innerHTML = '<div class="chat-status-line">Пока никто не писал.</div>';
-        return;
-      }
+      if (snap.empty) { bodyEl.innerHTML = '<div class="chat-status-line">Пока никто не писал.</div>'; return; }
       bodyEl.innerHTML = '';
       snap.forEach((d) => {
         const t = d.data();
         const row = document.createElement('div');
         row.className = 'thread-item';
         const initial = (t.visitorName || '?').trim().charAt(0).toUpperCase();
-        row.innerHTML = `
-          <div class="av">${initial}</div>
-          <div class="info">
-            <div class="nm">${escapeHtml(t.visitorName || 'Гость')} ${t.unreadByAdmin ? '<span class="unread"></span>' : ''}</div>
-            <div class="pv">${escapeHtml(t.lastMessage || '')}</div>
-          </div>`;
+        row.innerHTML = `<div class="av">${initial}</div><div class="info"><div class="nm">${escapeHtml(t.visitorName || 'Гость')} ${t.unreadByAdmin ? '<span class="unread"></span>' : ''}</div><div class="pv">${escapeHtml(t.lastMessage || '')}</div></div>`;
         row.addEventListener('click', () => openAdminThread(d.id, t));
         bodyEl.appendChild(row);
       });
@@ -849,23 +702,13 @@
   }
 
   function openAdminThread(threadId, threadData) {
-    activeThreadId = threadId;
-    detachThreads();
-    backBtn.style.display = 'inline-block';
-    titleEl.textContent = threadData.visitorName || 'Гость';
-    subEl.textContent = threadData.visitorEmail || '';
-    footEl.style.display = 'flex';
+    activeThreadId = threadId; detachThreads();
+    backBtn.style.display = 'inline-block'; titleEl.textContent = threadData.visitorName || 'Гость'; subEl.textContent = threadData.visitorEmail || ''; footEl.style.display = 'flex';
     bodyEl.innerHTML = '<div class="chat-status-line">загрузка…</div>';
-
     updateDoc(doc(db, 'threads', threadId), { unreadByAdmin: false }).catch(console.error);
-
     const msgsRef = query(collection(db, 'threads', threadId, 'messages'), orderBy('createdAt', 'asc'));
     detachMessages();
-    unsubMessages = onSnapshot(msgsRef, (snap) => {
-      bodyEl.innerHTML = '';
-      snap.forEach((d) => renderMsg(d.data(), true));
-      bodyEl.scrollTop = bodyEl.scrollHeight;
-    }, console.error);
+    unsubMessages = onSnapshot(msgsRef, (snap) => { bodyEl.innerHTML = ''; snap.forEach((d) => renderMsg(d.data(), true)); bodyEl.scrollTop = bodyEl.scrollHeight; }, console.error);
   }
 
   function renderMsg(m, asAdminView = false) {
@@ -884,113 +727,137 @@
     inputEl.value = ''; inputEl.style.height = 'auto';
     try {
       await addDoc(collection(db, 'threads', activeThreadId, 'messages'), {
-        text,
-        senderId: currentUser.uid,
-        senderName: currentUser.displayName || (isAdmin ? 'Sema' : 'Гость'),
-        isAdmin: isAdmin,
-        createdAt: serverTimestamp()
+        text, senderId: currentUser.uid, senderName: currentUser.displayName || (isAdmin ? 'Sema' : 'Гость'), isAdmin: isAdmin, createdAt: serverTimestamp()
       });
-      await updateDoc(doc(db, 'threads', activeThreadId), {
-        lastMessage: text,
-        lastMessageAt: serverTimestamp(),
-        unreadByAdmin: isAdmin ? false : true
-      });
+      await updateDoc(doc(db, 'threads', activeThreadId), { lastMessage: text, lastMessageAt: serverTimestamp(), unreadByAdmin: isAdmin ? false : true });
     } catch (e) { console.error(e); }
   }
 
-  function escapeHtml(str) {
-    return String(str)
-      .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;').replaceAll('"', '&quot;');
-  }
+  function escapeHtml(str) { return String(str).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;'); }
 </script>
 
 <script>
-  // reveal-on-scroll
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // reveal on scroll
   const io = new IntersectionObserver((entries) => {
-    for (const e of entries){
-      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
-    }
-  }, { threshold: 0.1 });
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // live clock in topbar
-  const clockEl = document.getElementById('clockText');
-  function tick(){
-    const d = new Date();
-    clockEl.textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-  }
-  tick(); setInterval(tick, 30000);
+  // glow cursor
+  const glow = document.getElementById('glowCursor');
+  let gx = window.innerWidth/2, gy = window.innerHeight/2, tx = gx, ty = gy;
+  window.addEventListener('pointermove', (e) => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+  function glowLoop(){ gx += (tx-gx)*0.12; gy += (ty-gy)*0.12; glow.style.transform = `translate(${gx}px,${gy}px) translate(-50%,-50%)`; requestAnimationFrame(glowLoop); }
+  if (!reduceMotion) glowLoop();
 
-  // oscilloscope signature trace
+  // ===== AURORA (soft moving blobs) =====
   (function(){
-    const canvas = document.getElementById('scopeCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let w, h, dpr;
+    const c = document.getElementById('aurora'); const ctx = c.getContext('2d');
+    let w,h,dpr;
+    const blobs = [
+      {x:0.2,y:0.3,r:0.5,hue:'139,92,246',vx:0.00008,vy:0.00005,ph:0},
+      {x:0.8,y:0.4,r:0.55,hue:'34,211,238',vx:-0.00006,vy:0.00007,ph:2},
+      {x:0.5,y:0.8,r:0.5,hue:'244,114,182',vx:0.00005,vy:-0.00006,ph:4}
+    ];
+    function resize(){ dpr=Math.min(window.devicePixelRatio||1,1.6); w=c.clientWidth=window.innerWidth; h=c.clientHeight=window.innerHeight; c.width=w*dpr; c.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+    window.addEventListener('resize', resize); resize();
+    function frame(t){
+      ctx.clearRect(0,0,w,h);
+      ctx.globalCompositeOperation='lighter';
+      blobs.forEach(b=>{
+        const cx=(b.x + Math.sin(t*b.vx+b.ph)*0.06)*w;
+        const cy=(b.y + Math.cos(t*b.vy+b.ph)*0.06)*h;
+        const rad=b.r*Math.max(w,h);
+        const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rad);
+        g.addColorStop(0,`rgba(${b.hue},0.16)`);
+        g.addColorStop(1,`rgba(${b.hue},0)`);
+        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.fill();
+      });
+      ctx.globalCompositeOperation='source-over';
+      if(!reduceMotion) requestAnimationFrame(frame);
+    }
+    if(reduceMotion){ frame(0); } else requestAnimationFrame(frame);
+  })();
+
+  // ===== PARTICLE FIELD (constellation, mouse-reactive) =====
+  (function(){
+    const c = document.getElementById('field'); const ctx = c.getContext('2d');
+    let w,h,dpr,particles=[],mouse={x:-9999,y:-9999};
     function resize(){
-      dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      w = rect.width; h = rect.height;
-      canvas.width = Math.max(1, w * dpr);
-      canvas.height = Math.max(1, h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      dpr=Math.min(window.devicePixelRatio||1,1.6); w=window.innerWidth; h=window.innerHeight;
+      c.width=w*dpr; c.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      const count = Math.min(120, Math.floor(w*h/14000));
+      particles=[];
+      for(let i=0;i<count;i++) particles.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*0.25,vy:(Math.random()-0.5)*0.25,r:Math.random()*1.4+0.5});
     }
-    resize();
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', resize); resize();
+    window.addEventListener('pointermove', (e)=>{ mouse.x=e.clientX; mouse.y=e.clientY; }, {passive:true});
+    window.addEventListener('pointerleave', ()=>{ mouse.x=-9999; mouse.y=-9999; });
+    const LINK=120;
+    function frame(){
+      ctx.clearRect(0,0,w,h);
+      for(const p of particles){
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
+        const dxm=p.x-mouse.x, dym=p.y-mouse.y, dm=Math.hypot(dxm,dym);
+        if(dm<160){ p.x+=dxm/dm*0.6; p.y+=dym/dm*0.6; }
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(173,160,230,0.55)'; ctx.fill();
+      }
+      for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+          const a=particles[i],b=particles[j]; const d=Math.hypot(a.x-b.x,a.y-b.y);
+          if(d<LINK){ const o=(1-d/LINK)*0.5; ctx.strokeStyle=`rgba(139,92,246,${o*0.5})`; ctx.lineWidth=0.6; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+        }
+        const a=particles[i]; const dmx=Math.hypot(a.x-mouse.x,a.y-mouse.y);
+        if(dmx<LINK+40){ const o=(1-dmx/(LINK+40)); ctx.strokeStyle=`rgba(34,211,238,${o*0.5})`; ctx.lineWidth=0.7; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(mouse.x,mouse.y); ctx.stroke(); }
+      }
+      if(!reduceMotion) requestAnimationFrame(frame);
+    }
+    if(reduceMotion){ frame(); } else requestAnimationFrame(frame);
+  })();
 
-    function drawGrid(){
-      ctx.clearRect(0, 0, w, h);
-      ctx.strokeStyle = 'rgba(20,24,27,0.10)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, h/2); ctx.lineTo(w, h/2);
-      ctx.stroke();
-      const tickCount = Math.max(1, Math.floor(w / 30));
-      ctx.strokeStyle = 'rgba(20,24,27,0.16)';
-      for (let i = 0; i <= tickCount; i++){
-        const x = i * (w / tickCount);
+  // ===== ORB in featured card =====
+  (function(){
+    const c=document.getElementById('orbCanvas'); if(!c) return; const ctx=c.getContext('2d');
+    let w,h,dpr;
+    function resize(){ dpr=Math.min(window.devicePixelRatio||1,1.6); const r=c.getBoundingClientRect(); w=r.width;h=r.height; c.width=w*dpr;c.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+    resize(); window.addEventListener('resize', resize);
+    const rings=70;
+    function frame(t){
+      ctx.clearRect(0,0,w,h);
+      const cx=w/2, cy=h/2, R=Math.min(w,h)*0.32;
+      // glow core
+      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R*1.8);
+      g.addColorStop(0,'rgba(34,211,238,0.25)'); g.addColorStop(0.5,'rgba(139,92,246,0.12)'); g.addColorStop(1,'rgba(139,92,246,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+      // rotating dotted orbit
+      for(let k=0;k<3;k++){
         ctx.beginPath();
-        ctx.moveTo(x, h - 9);
-        ctx.lineTo(x, h);
-        ctx.stroke();
+        const rr=R*(0.7+k*0.35); const rot=t*0.0003*(k%2?-1:1)+k;
+        for(let i=0;i<rings;i++){
+          const a=(i/rings)*Math.PI*2+rot;
+          const x=cx+Math.cos(a)*rr, y=cy+Math.sin(a)*rr*0.42;
+          if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        }
+        ctx.closePath(); ctx.strokeStyle=k===1?'rgba(244,114,182,0.5)':'rgba(173,160,230,0.45)'; ctx.lineWidth=1; ctx.stroke();
       }
+      ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2); ctx.fillStyle='#22D3EE'; ctx.shadowColor='#22D3EE'; ctx.shadowBlur=14; ctx.fill(); ctx.shadowBlur=0;
+      if(!reduceMotion) requestAnimationFrame(frame);
     }
+    if(reduceMotion){ frame(0); } else requestAnimationFrame(frame);
+  })();
 
-    function drawTrace(t){
-      drawGrid();
-      ctx.beginPath();
-      ctx.strokeStyle = '#FF4B1F';
-      ctx.lineWidth = 2;
-      for (let x = 0; x <= w; x += 2){
-        const nx = x / w;
-        const y = h/2
-          + Math.sin(nx*14 + t*0.0017) * h*0.17
-          + Math.sin(nx*37 + t*0.0041) * h*0.045;
-        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(14,140,115,0.7)';
-      ctx.lineWidth = 1.5;
-      for (let x = 0; x <= w; x += 2){
-        const nx = x / w;
-        const y = h/2
-          + Math.sin(nx*9 - t*0.0012 + 1.4) * h*0.11
-          + Math.sin(nx*23 - t*0.0026) * h*0.035;
-        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-    }
-
-    if (reduceMotion){
-      drawTrace(0);
-    } else {
-      function loop(t){ drawTrace(t); requestAnimationFrame(loop); }
-      requestAnimationFrame(loop);
-    }
+  // ===== 3D tilt on featured card =====
+  (function(){
+    const card=document.getElementById('featuredCard'); if(!card||reduceMotion) return;
+    card.addEventListener('pointermove',(e)=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width-0.5, py=(e.clientY-r.top)/r.height-0.5;
+      card.style.transform=`perspective(1000px) rotateY(${px*5}deg) rotateX(${-py*5}deg)`;
+    });
+    card.addEventListener('pointerleave',()=>{ card.style.transform='perspective(1000px) rotateX(0) rotateY(0)'; });
   })();
 </script>
 
