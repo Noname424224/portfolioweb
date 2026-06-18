@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sema — разработчик</title>
+  <title>Sverstal — разработчик</title>
   <meta name="description" content="Разработчик из Новосибирска. Веб, Python, локальные LLM, десктоп и системы. От кода до прода." />
 
   <link rel="icon" type="image/png" href="avatar.png" />
   <link rel="apple-touch-icon" href="avatar.png" />
 
-  <meta property="og:title" content="Sema — разработчик" />
+  <meta property="og:title" content="Sverstal — разработчик" />
   <meta property="og:description" content="Сайты и веб-приложения — от идеи до прода." />
   <meta property="og:image" content="avatar.png" />
   <meta property="og:type" content="website" />
@@ -76,7 +76,117 @@
       .reveal { clip-path: inset(0 0 0 0); opacity: 1; transition: none; }
       .ticker { animation: none; }
       html { scroll-behavior: auto; }
+      .letter { opacity: 1 !important; transform: none !important; }
     }
+
+    /* Анимация букв в заголовке */
+    .letter { display: inline-block; opacity: 0; transform: translateY(0.6em); transition: opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
+    .letter.in { opacity: 1; transform: none; }
+
+    /* Магнитные кнопки */
+    .magnet { display: inline-block; transition: transform .35s cubic-bezier(.2,.7,.3,1); will-change: transform; }
+    .magnet > * { display: inline-block; transition: transform .35s cubic-bezier(.2,.7,.3,1); }
+
+    /* Параллакс героя */
+    .hero-parallax { will-change: transform; }
+
+    /* ====== ТЕМЫ ====== */
+    /* Базовая (paper) уже задана через Tailwind-конфиг. Остальные просто переопределяют через .theme-X на <html>. */
+    html, body { transition: background-color .4s ease, color .4s ease; }
+
+    /* --- NIGHT --- */
+    html.theme-night body { background:#16151A; color:#F5EDE0; }
+    html.theme-night .bg-paper { background-color:#16151A !important; }
+    html.theme-night .text-ink { color:#F5EDE0 !important; }
+    html.theme-night .border-ink { border-color:#F5EDE0 !important; }
+    html.theme-night .border-ink\/15 { border-color:rgba(245,237,224,.18) !important; }
+    html.theme-night .border-ink\/20 { border-color:rgba(245,237,224,.22) !important; }
+    html.theme-night .border-ink\/25 { border-color:rgba(245,237,224,.28) !important; }
+    html.theme-night .text-sub { color:#8C8590 !important; }
+    html.theme-night .text-rasp { color:#F25C7A !important; }
+    html.theme-night .bg-rasp { background-color:#F25C7A !important; }
+    html.theme-night .bg-ink { background-color:#F5EDE0 !important; color:#16151A !important; }
+    html.theme-night a.bg-ink, html.theme-night button.bg-ink { color:#16151A !important; }
+    html.theme-night a.bg-ink span, html.theme-night button.bg-ink span { color:#16151A !important; }
+    html.theme-night .nav-shell { background-color:rgba(22,21,26,.9) !important; }
+    html.theme-night .specimen:hover { background:#F5EDE0 !important; color:#16151A !important; }
+    html.theme-night .specimen:hover .num, html.theme-night .specimen:hover .lnk-rasp { color:#F25C7A !important; }
+    html.theme-night .grain { mix-blend-mode:screen; opacity:.25; }
+    html.theme-night ::-webkit-scrollbar-thumb { background:#2c2832; }
+    html.theme-night ::-webkit-scrollbar-track { background:#1E1C22; }
+    html.theme-night ::selection { background:#F25C7A; color:#16151A; }
+
+    /* --- MINT --- */
+    html.theme-mint body { background:#E8F2EA; color:#14322A; }
+    html.theme-mint .bg-paper { background-color:#E8F2EA !important; }
+    html.theme-mint .text-ink { color:#14322A !important; }
+    html.theme-mint .border-ink { border-color:#14322A !important; }
+    html.theme-mint .border-ink\/15 { border-color:rgba(20,50,42,.18) !important; }
+    html.theme-mint .border-ink\/20 { border-color:rgba(20,50,42,.22) !important; }
+    html.theme-mint .border-ink\/25 { border-color:rgba(20,50,42,.28) !important; }
+    html.theme-mint .text-sub { color:#587068 !important; }
+    html.theme-mint .text-rasp { color:#C7456E !important; }
+    html.theme-mint .bg-rasp { background-color:#C7456E !important; }
+    html.theme-mint .bg-ink { background-color:#14322A !important; color:#E8F2EA !important; }
+    html.theme-mint a.bg-ink, html.theme-mint button.bg-ink { color:#E8F2EA !important; }
+    html.theme-mint a.bg-ink span, html.theme-mint button.bg-ink span { color:#E8F2EA !important; }
+    html.theme-mint .nav-shell { background-color:rgba(232,242,234,.9) !important; }
+    html.theme-mint .specimen:hover { background:#14322A !important; color:#E8F2EA !important; }
+    html.theme-mint .specimen:hover .num, html.theme-mint .specimen:hover .lnk-rasp { color:#C7456E !important; }
+    html.theme-mint ::-webkit-scrollbar-thumb { background:#b8d2bf; }
+    html.theme-mint ::-webkit-scrollbar-track { background:#DCEBE0; }
+    html.theme-mint ::selection { background:#C7456E; color:#E8F2EA; }
+
+    /* --- PARCHMENT --- */
+    html.theme-parchment body { background:#F2E9D8; color:#2B2418; }
+    html.theme-parchment .bg-paper { background-color:#F2E9D8 !important; }
+    html.theme-parchment .text-ink { color:#2B2418 !important; }
+    html.theme-parchment .border-ink { border-color:#2B2418 !important; }
+    html.theme-parchment .border-ink\/15 { border-color:rgba(43,36,24,.18) !important; }
+    html.theme-parchment .border-ink\/20 { border-color:rgba(43,36,24,.22) !important; }
+    html.theme-parchment .border-ink\/25 { border-color:rgba(43,36,24,.28) !important; }
+    html.theme-parchment .text-sub { color:#7A6A52 !important; }
+    html.theme-parchment .text-rasp { color:#B23A1F !important; }
+    html.theme-parchment .bg-rasp { background-color:#B23A1F !important; }
+    html.theme-parchment .bg-ink { background-color:#2B2418 !important; color:#F2E9D8 !important; }
+    html.theme-parchment a.bg-ink, html.theme-parchment button.bg-ink { color:#F2E9D8 !important; }
+    html.theme-parchment a.bg-ink span, html.theme-parchment button.bg-ink span { color:#F2E9D8 !important; }
+    html.theme-parchment .nav-shell { background-color:rgba(242,233,216,.9) !important; }
+    html.theme-parchment .specimen:hover { background:#2B2418 !important; color:#F2E9D8 !important; }
+    html.theme-parchment .specimen:hover .num, html.theme-parchment .specimen:hover .lnk-rasp { color:#B23A1F !important; }
+    html.theme-parchment ::-webkit-scrollbar-thumb { background:#d6c8a8; }
+    html.theme-parchment ::-webkit-scrollbar-track { background:#EADFC8; }
+    html.theme-parchment ::selection { background:#B23A1F; color:#F2E9D8; }
+
+    /* Принудительная видимость заголовков и описаний внутри карточек во всех тёмных темах */
+    html.theme-night #pricing h3, html.theme-night #process h3 { color:#F5EDE0 !important; }
+    html.theme-night #pricing p, html.theme-night #process p { color:#A8A2AE !important; }
+    html.theme-mint #pricing h3, html.theme-mint #process h3 { color:#14322A !important; }
+    html.theme-mint #pricing p, html.theme-mint #process p { color:#587068 !important; }
+    html.theme-parchment #pricing h3, html.theme-parchment #process h3 { color:#2B2418 !important; }
+    html.theme-parchment #pricing p, html.theme-parchment #process p { color:#7A6A52 !important; }
+
+    /* Переключатель тем */
+    .theme-dot {
+      width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid currentColor;
+      cursor: pointer; padding: 0; position: relative;
+      transition: transform .2s ease;
+    }
+    .theme-dot:hover { transform: scale(1.15); }
+    .theme-dot[aria-pressed="true"]::after {
+      content: ""; position: absolute; inset: -5px; border: 1.5px solid #E11D54; border-radius: 50%;
+    }
+    html.theme-night .theme-dot[aria-pressed="true"]::after { border-color:#F25C7A; }
+    html.theme-mint  .theme-dot[aria-pressed="true"]::after { border-color:#C7456E; }
+    html.theme-parchment .theme-dot[aria-pressed="true"]::after { border-color:#B23A1F; }
+    .theme-dot[data-theme-name="paper"]     { background: #FBEDEF; }
+    .theme-dot[data-theme-name="night"]     { background: #16151A; }
+    .theme-dot[data-theme-name="mint"]      { background: #E8F2EA; }
+    .theme-dot[data-theme-name="parchment"] { background: #F2E9D8; }
+
+    /* Бургер → крестик */
+    #burger.is-open .burger-bar:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+    #burger.is-open .burger-bar:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
   </style>
 </head>
 
@@ -84,38 +194,72 @@
 
   <div class="grain"></div>
 
-  <header class="sticky top-0 z-50 bg-paper/90 backdrop-blur-[2px] border-b border-ink/15">
-    <nav class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+  <header class="sticky top-0 z-50 bg-paper/90 backdrop-blur-[2px] border-b border-ink/15 nav-shell">
+    <nav class="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
       <a href="#top" class="flex items-center gap-2.5 font-mono text-sm font-bold tracking-tight">
         <img src="avatar.png" alt="" class="w-7 h-7 rounded-md border border-ink/20 object-cover" />
-        SEMA<span class="text-rasp">.</span>
+        SVERSTAL<span class="text-rasp">.</span>
       </a>
-      <ul class="hidden sm:flex items-center gap-7 font-mono text-xs">
-        <li><a href="#work" class="underline-grow">работы</a></li>
+      <ul class="hidden md:flex items-center gap-7 font-mono text-xs">
         <li><a href="#about" class="underline-grow">обо&nbsp;мне</a></li>
+        <li><a href="#work" class="underline-grow">работы</a></li>
+        <li><a href="#process" class="underline-grow">процесс</a></li>
+        <li><a href="#pricing" class="underline-grow">цены</a></li>
         <li><a href="#contact" class="underline-grow">контакты</a></li>
       </ul>
-      <a href="#contact" class="font-mono text-xs border border-ink px-3 py-1.5 hover:bg-ink hover:text-paper transition">Связаться</a>
+      <div class="flex items-center gap-3 sm:gap-4">
+        <div id="theme-switcher" class="hidden md:flex items-center gap-2" role="group" aria-label="Темы">
+          <button class="theme-dot" data-theme-name="paper"     title="Бумага"    aria-label="Тема: бумага"></button>
+          <button class="theme-dot" data-theme-name="night"     title="Ночь"      aria-label="Тема: ночь"></button>
+          <button class="theme-dot" data-theme-name="mint"      title="Мята"      aria-label="Тема: мята"></button>
+          <button class="theme-dot" data-theme-name="parchment" title="Пергамент" aria-label="Тема: пергамент"></button>
+        </div>
+        <a href="#contact" class="hidden sm:inline-flex font-mono text-xs border border-ink px-3 py-1.5 hover:bg-ink hover:text-paper transition">Связаться</a>
+        <button id="burger" class="md:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5 border border-ink" aria-label="Меню" aria-expanded="false">
+          <span class="burger-bar block w-4 h-px bg-ink transition-transform"></span>
+          <span class="burger-bar block w-4 h-px bg-ink transition-transform"></span>
+        </button>
+      </div>
     </nav>
+
+    <!-- Мобильное меню -->
+    <div id="mobile-menu" class="md:hidden hidden border-t border-ink/15">
+      <ul class="px-5 py-5 font-mono text-sm space-y-3">
+        <li><a href="#about"   class="block py-1">обо мне</a></li>
+        <li><a href="#work"    class="block py-1">работы</a></li>
+        <li><a href="#process" class="block py-1">процесс</a></li>
+        <li><a href="#pricing" class="block py-1">цены</a></li>
+        <li><a href="#contact" class="block py-1">контакты</a></li>
+      </ul>
+      <div class="px-5 pb-5 pt-3 border-t border-ink/15 flex items-center justify-between">
+        <span class="font-mono text-[11px] text-sub">тема</span>
+        <div id="theme-switcher-mobile" class="flex items-center gap-3" role="group" aria-label="Темы">
+          <button class="theme-dot" data-theme-name="paper"     aria-label="Тема: бумага"></button>
+          <button class="theme-dot" data-theme-name="night"     aria-label="Тема: ночь"></button>
+          <button class="theme-dot" data-theme-name="mint"      aria-label="Тема: мята"></button>
+          <button class="theme-dot" data-theme-name="parchment" aria-label="Тема: пергамент"></button>
+        </div>
+      </div>
+    </div>
   </header>
 
   <main id="top" class="relative z-10">
 
     <!-- HERO -->
-    <section class="max-w-5xl mx-auto px-6 pt-20 pb-24 sm:pt-28 sm:pb-32">
-      <p class="reveal font-mono text-xs text-pine mb-8 flex items-center gap-2">
+    <section class="max-w-5xl mx-auto px-5 sm:px-6 pt-14 sm:pt-28 pb-20 sm:pb-32">
+      <p class="font-mono text-xs text-pine mb-6 sm:mb-8 flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-pine inline-block"></span>
         Новосибирск — открыт к проектам
       </p>
 
-      <h1 class="reveal font-display font-medium leading-[0.92] tracking-tight text-[15vw] sm:text-7xl lg:text-8xl">
-        Делаю сайты<br>
-        и <span class="italic text-rasp">веб-приложения</span> —<br>
-        от идеи до <span class="italic">прода.</span>
+      <h1 class="font-display font-medium leading-[0.95] tracking-tight text-[11vw] sm:text-7xl lg:text-8xl">
+        <span class="word-line" data-text="Делаю сайты"></span><br>
+        <span class="word-line" data-text="и "></span><span class="italic text-rasp word-line" data-text="веб-приложения"></span><span class="word-line" data-text=" —"></span><br>
+        <span class="word-line" data-text="от идеи до "></span><span class="italic word-line" data-text="прода."></span>
       </h1>
 
-      <div class="reveal mt-10 grid sm:grid-cols-[1.3fr_1fr] gap-8 items-start">
-        <p class="text-lg sm:text-xl leading-relaxed max-w-xl">
+      <div class="mt-8 sm:mt-10 grid sm:grid-cols-[1.3fr_1fr] gap-6 sm:gap-8 items-start">
+        <p class="text-base sm:text-xl leading-relaxed max-w-xl">
           Разработчик. Собираю проекты целиком — от первого коммита до прода. Веб на React и чистом
           JavaScript, бэкенд на Firebase, деплой на Vercel. Делаю так, чтобы было быстро, аккуратно и понятно.
         </p>
@@ -126,9 +270,9 @@
         </div>
       </div>
 
-      <div class="reveal mt-12 flex flex-wrap gap-3">
-        <a href="#work" class="font-mono text-sm bg-ink text-paper px-6 py-3 hover:bg-rasp transition">Смотреть работы →</a>
-        <a href="https://github.com/Noname424224" class="font-mono text-sm border border-ink px-6 py-3 hover:bg-ink hover:text-paper transition">GitHub</a>
+      <div class="mt-10 sm:mt-12 flex flex-wrap gap-3">
+        <a href="#work" class="magnet font-mono text-sm bg-ink text-paper px-5 sm:px-6 py-3 hover:bg-rasp transition"><span>Смотреть работы →</span></a>
+        <a href="https://github.com/Noname424224" class="magnet font-mono text-sm border border-ink px-5 sm:px-6 py-3 hover:bg-ink hover:text-paper transition"><span>GitHub</span></a>
       </div>
     </section>
 
@@ -154,17 +298,61 @@
       </div>
     </div>
 
+    <!-- ABOUT -->
+    <section id="about" class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-32">
+      <div class="grid md:grid-cols-12 gap-10">
+        <div class="md:col-span-5">
+          <span class="font-mono text-xs text-sub">(02) обо мне</span>
+          <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight mt-4 leading-[0.95]">Что я<br>пишу.</h2>
+        </div>
+        <div class="md:col-span-7 space-y-5 text-lg leading-relaxed">
+          <p>Довожу проекты до рабочего продукта в проде, а не до красивого макета.</p>
+          <p class="text-sub text-base">
+            В вебе собираю интерфейсы на React и чистом JavaScript, верстаю на Tailwind, подключаю Firebase
+            для данных в реальном времени, авторизации и админ-панелей. Спокойно довожу проект до деплоя на Vercel.
+          </p>
+          <p class="text-sub text-base">
+            На Python делаю телеграм-ботов, автоматизацию и небольшие настольные приложения. Одинаково важны
+            и скорость, и то, насколько продуктом приятно пользоваться.
+          </p>
+          <p class="text-sub text-base">
+            Не боюсь новых задач и незнакомых инструментов — чем техничнее и интереснее задача, тем лучше.
+          </p>
+        </div>
+      </div>
+
+      <!-- Что умею -->
+      <div class="mt-16 border-t border-l border-ink grid sm:grid-cols-2 lg:grid-cols-4">
+        <div class="border-b border-r border-ink p-6">
+          <div class="font-mono text-xs text-rasp mb-2">/ интерфейсы</div>
+          <p class="text-sm leading-relaxed">React, чистый JavaScript, Tailwind, адаптивная вёрстка mobile-first.</p>
+        </div>
+        <div class="border-b border-r border-ink p-6">
+          <div class="font-mono text-xs text-rasp mb-2">/ бэкенд</div>
+          <p class="text-sm leading-relaxed">Firebase — данные в реальном времени, авторизация, админ-панели.</p>
+        </div>
+        <div class="border-b border-r border-ink p-6">
+          <div class="font-mono text-xs text-rasp mb-2">/ python</div>
+          <p class="text-sm leading-relaxed">Телеграм-боты, автоматизация, настольные приложения.</p>
+        </div>
+        <div class="border-b border-r border-ink p-6">
+          <div class="font-mono text-xs text-rasp mb-2">/ деплой</div>
+          <p class="text-sm leading-relaxed">Сборка и публикация проекта на Vercel — от кода до рабочей ссылки.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- WORK -->
-    <section id="work" class="max-w-5xl mx-auto px-6 py-24 sm:py-32">
-      <div class="reveal flex items-baseline justify-between mb-12">
-        <h2 class="font-display text-4xl sm:text-6xl font-medium tracking-tight">Работа</h2>
-        <span class="font-mono text-xs text-sub">(02) кейс</span>
+    <section id="work" class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-32">
+      <div class="flex items-baseline justify-between mb-12">
+        <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight">Работы</h2>
+        <span class="font-mono text-xs text-sub">(03) кейсы</span>
       </div>
 
       <div class="border-t border-ink">
 
         <!-- 01 СВЕТлица -->
-        <article class="specimen group border-b border-ink relative overflow-hidden p-7 sm:p-10 grid sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-10 items-start cursor-default">
+        <article class="specimen group border-b border-ink relative overflow-hidden p-5 sm:p-10 grid sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-10 items-start cursor-default">
           <span class="watermark pointer-events-none absolute -right-2 -bottom-8 font-display text-[9rem] leading-none text-rasp/10 select-none">01</span>
           <span class="num font-mono text-sm text-rasp">01</span>
           <div class="relative z-10">
@@ -189,68 +377,154 @@
           </div>
         </article>
 
+        <div class="border-b border-ink p-5 sm:p-10 text-center">
+          <p class="font-mono text-xs text-sub tracking-wide">
+            <span class="text-rasp">●</span>&nbsp;&nbsp;скоро здесь появятся новые проекты
+          </p>
+        </div>
 
       </div>
     </section>
 
-    <!-- ABOUT -->
-    <section id="about" class="max-w-5xl mx-auto px-6 py-24 sm:py-32">
-      <div class="grid md:grid-cols-12 gap-10">
-        <div class="reveal md:col-span-5">
-          <span class="font-mono text-xs text-sub">(03) обо мне</span>
-          <h2 class="font-display text-4xl sm:text-6xl font-medium tracking-tight mt-4 leading-[0.95]">Что я<br>пишу.</h2>
+    <!-- ПРОЦЕСС -->
+    <section id="process" class="border-t border-ink">
+      <div class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-32">
+        <div class="flex items-baseline justify-between mb-12">
+          <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight">Как я работаю</h2>
+          <span class="font-mono text-xs text-sub">(04) процесс</span>
         </div>
-        <div class="reveal md:col-span-7 space-y-5 text-lg leading-relaxed">
-          <p>Довожу проекты до рабочего продукта в проде, а не до красивого макета.</p>
-          <p class="text-sub text-base">
-            В вебе собираю интерфейсы на React и чистом JavaScript, верстаю на Tailwind, подключаю Firebase
-            для данных в реальном времени, авторизации и админ-панелей. Спокойно довожу проект до деплоя на Vercel.
-          </p>
-          <p class="text-sub text-base">
-            На Python делаю телеграм-ботов, автоматизацию и небольшие настольные приложения. Одинаково важны
-            и скорость, и то, насколько продуктом приятно пользоваться.
-          </p>
-          <p class="text-sub text-base">
-            Не боюсь новых задач и незнакомых инструментов — чем техничнее и интереснее задача, тем лучше.
-          </p>
-        </div>
-      </div>
 
-      <!-- Что умею -->
-      <div class="reveal mt-16 border-t border-l border-ink grid sm:grid-cols-2 lg:grid-cols-4">
-        <div class="border-b border-r border-ink p-6">
-          <div class="font-mono text-xs text-rasp mb-2">/ интерфейсы</div>
-          <p class="text-sm leading-relaxed">React, чистый JavaScript, Tailwind, адаптивная вёрстка mobile-first.</p>
+        <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-ink border border-ink">
+          <li class="bg-paper p-7">
+            <div class="font-mono text-xs text-rasp mb-3">шаг 01</div>
+            <h3 class="font-display text-2xl font-medium mb-3">Бриф</h3>
+            <p class="text-sm leading-relaxed text-sub">Созваниваемся или переписываемся. Разбираю, что нужно сделать, для кого и в какой срок. Согласовываем объём и цену.</p>
+          </li>
+          <li class="bg-paper p-7">
+            <div class="font-mono text-xs text-rasp mb-3">шаг 02</div>
+            <h3 class="font-display text-2xl font-medium mb-3">Прототип</h3>
+            <p class="text-sm leading-relaxed text-sub">Собираю первую рабочую версию — структуру, основные экраны и логику. На этом этапе уже можно потрогать руками.</p>
+          </li>
+          <li class="bg-paper p-7">
+            <div class="font-mono text-xs text-rasp mb-3">шаг 03</div>
+            <h3 class="font-display text-2xl font-medium mb-3">Доводка</h3>
+            <p class="text-sm leading-relaxed text-sub">Дизайн, адаптив, анимации, мелочи. Правки и обсуждение по ходу — не молчу до сдачи, держу в курсе.</p>
+          </li>
+          <li class="bg-paper p-7">
+            <div class="font-mono text-xs text-rasp mb-3">шаг 04</div>
+            <h3 class="font-display text-2xl font-medium mb-3">Деплой</h3>
+            <p class="text-sm leading-relaxed text-sub">Публикую проект на Vercel, подключаю домен и аналитику. Передаю исходники и инструкции.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ТАРИФЫ -->
+    <section id="pricing" class="border-t border-ink">
+      <div class="max-w-5xl mx-auto px-6 py-24 sm:py-32 relative">
+        <div class="flex items-baseline justify-between mb-12">
+          <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight">Сколько стоит</h2>
+          <span class="font-mono text-xs text-sub">(05) тарифы</span>
         </div>
-        <div class="border-b border-r border-ink p-6">
-          <div class="font-mono text-xs text-rasp mb-2">/ бэкенд</div>
-          <p class="text-sm leading-relaxed">Firebase — данные в реальном времени, авторизация, админ-панели.</p>
+
+        <!-- Штамп -->
+        <div class="hidden lg:block absolute right-10 top-32 rotate-[-14deg] pointer-events-none select-none">
+          <div class="relative w-44 h-44">
+            <svg viewBox="0 0 200 200" class="w-full h-full text-rasp/70">
+              <defs>
+                <path id="stampCircle" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0"/>
+              </defs>
+              <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="2 4"/>
+              <circle cx="100" cy="100" r="78" fill="none" stroke="currentColor" stroke-width="2"/>
+              <text font-family="Space Mono, monospace" font-size="11" font-weight="700" fill="currentColor" letter-spacing="3">
+                <textPath href="#stampCircle" startOffset="0%">ПРОВЕРЕНО · СОБРАНО ВРУЧНУЮ · 2026 ·</textPath>
+              </text>
+              <text x="100" y="95" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="24" fill="currentColor">honest</text>
+              <text x="100" y="120" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="24" fill="currentColor">work</text>
+            </svg>
+          </div>
         </div>
-        <div class="border-b border-r border-ink p-6">
-          <div class="font-mono text-xs text-rasp mb-2">/ python</div>
-          <p class="text-sm leading-relaxed">Телеграм-боты, автоматизация, настольные приложения.</p>
+
+        <p class="text-sub max-w-xl mb-6 text-[15px] leading-relaxed">
+          Финальная сумма — договорная, зависит от объёма и сроков. Ниже — ориентировочные цены, обсуждаем заранее, фиксируем письменно.
+        </p>
+
+        <!-- Глоссарий этапов -->
+        <div class="mb-10 border border-ink/20 p-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-3 font-mono text-[12px]">
+          <div><span class="text-rasp">бриф —</span> <span class="text-sub">обсуждаем задачу, сроки, бюджет</span></div>
+          <div><span class="text-rasp">прототип —</span> <span class="text-sub">первая рабочая версия, можно потрогать</span></div>
+          <div><span class="text-rasp">доводка —</span> <span class="text-sub">дизайн, адаптив, правки</span></div>
+          <div><span class="text-rasp">деплой —</span> <span class="text-sub">публикация и передача исходников</span></div>
         </div>
-        <div class="border-b border-r border-ink p-6">
-          <div class="font-mono text-xs text-rasp mb-2">/ деплой</div>
-          <p class="text-sm leading-relaxed">Сборка и публикация проекта на Vercel — от кода до рабочей ссылки.</p>
+
+        <div class="grid md:grid-cols-3 gap-px bg-ink border border-ink">
+          <div class="bg-paper p-6 sm:p-8 flex flex-col">
+            <div class="font-mono text-xs text-rasp mb-4">/ лендинг</div>
+            <h3 class="font-display text-3xl font-medium mb-2">Сайт-визитка</h3>
+            <p class="text-sub text-sm leading-relaxed mb-6">Одностраничный сайт с описанием услуг, контактами и адаптивом. Быстрый старт, чистый код.</p>
+            <ul class="font-mono text-[13px] text-sub space-y-2 mb-6 flex-1">
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>бриф</span><span class="text-ink">½ дня</span></li>
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>прототип</span><span class="text-ink">½ дня</span></li>
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>доводка</span><span class="text-ink">1 день</span></li>
+              <li class="flex justify-between"><span>деплой</span><span class="text-ink">½ дня</span></li>
+            </ul>
+            <div class="font-display text-3xl mb-1">договорная</div>
+            <div class="font-mono text-xs text-sub">ориентир: от 8&nbsp;000&nbsp;₽ · 2–3 дня</div>
+          </div>
+
+          <div class="bg-paper p-6 sm:p-8 flex flex-col relative">
+            <span class="absolute top-4 right-4 font-mono text-[10px] bg-rasp text-paper px-2 py-1">популярное</span>
+            <div class="font-mono text-xs text-rasp mb-4">/ многостраничный</div>
+            <h3 class="font-display text-3xl font-medium mb-2">Сайт с формами</h3>
+            <p class="text-sub text-sm leading-relaxed mb-6">Несколько страниц, формы заявок, интеграции, базовая админка. Подходит для студий и малого бизнеса.</p>
+            <ul class="font-mono text-[13px] text-sub space-y-2 mb-6 flex-1">
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>бриф</span><span class="text-ink">1 день</span></li>
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>прототип</span><span class="text-ink">2 дня</span></li>
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>доводка</span><span class="text-ink">2–3 дня</span></li>
+              <li class="flex justify-between"><span>деплой</span><span class="text-ink">½ дня</span></li>
+            </ul>
+            <div class="font-display text-3xl mb-1">договорная</div>
+            <div class="font-mono text-xs text-sub">ориентир: от 20&nbsp;000&nbsp;₽ · 5–7 дней</div>
+          </div>
+
+          <div class="bg-paper p-6 sm:p-8 flex flex-col">
+            <div class="font-mono text-xs text-rasp mb-4">/ приложение</div>
+            <h3 class="font-display text-3xl font-medium mb-2">Веб-приложение</h3>
+            <p class="text-sub text-sm leading-relaxed mb-6">Полноценный продукт: база данных, авторизация, личный кабинет, админка. Как СВЕТлица.</p>
+            <ul class="font-mono text-[13px] text-sub space-y-2 mb-6 flex-1">
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>бриф</span><span class="text-ink">1–2 дня</span></li>
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>прототип</span><span class="text-ink">3–4 дня</span></li>
+              <li class="flex justify-between border-b border-ink/15 pb-2"><span>доводка</span><span class="text-ink">5–7 дней</span></li>
+              <li class="flex justify-between"><span>деплой</span><span class="text-ink">1 день</span></li>
+            </ul>
+            <div class="font-display text-3xl mb-1">договорная</div>
+            <div class="font-mono text-xs text-sub">ориентир: от 40&nbsp;000&nbsp;₽ · 10–14 дней</div>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-sub">
+          <span>Боты, автоматизация, доработки — обсуждаются отдельно.</span>
+          <a href="#contact" class="text-rasp underline underline-offset-4">Обсудить проект →</a>
         </div>
       </div>
     </section>
 
     <!-- CONTACT -->
     <section id="contact" class="border-t border-ink">
-      <div class="max-w-5xl mx-auto px-6 py-24 sm:py-36">
-        <div class="reveal">
-          <span class="font-mono text-xs text-sub">(04) контакты</span>
-          <h2 class="font-display text-5xl sm:text-8xl font-medium tracking-tight mt-4 mb-10 leading-[0.9]">
+      <div class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-36">
+        <div class="">
+          <span class="font-mono text-xs text-sub">(06) контакты</span>
+          <h2 class="font-display text-4xl sm:text-8xl font-medium tracking-tight mt-4 mb-10 leading-[0.9]">
             Обсудим<br><span class="italic text-rasp">проект?</span>
           </h2>
-          <p class="text-lg text-sub max-w-md mb-10">Открыт к фрилансу и интересным задачам. Пишите на почту или в Telegram.</p>
+          <p class="text-lg text-sub max-w-md mb-4">Открыт к фрилансу и интересным задачам.</p>
+          <p class="font-mono text-sm text-ink mb-10">
+            Почта: <span class="select-all">pisarev.se2010@gmail.com</span>
+          </p>
           <div class="flex flex-col sm:flex-row gap-px bg-ink border border-ink font-mono text-sm w-full sm:w-auto sm:inline-flex">
-            <a href="tel:+79930124390" class="bg-paper px-6 py-4 hover:bg-rasp hover:text-paper transition text-center">+7&nbsp;993&nbsp;012-43-90</a>
-            <a href="mailto:pisarev.se2010@gmail.com" class="bg-paper px-6 py-4 hover:bg-rasp hover:text-paper transition text-center">Почта</a>
-            <a href="https://t.me/noname067067" class="bg-paper px-6 py-4 hover:bg-rasp hover:text-paper transition text-center">Telegram</a>
-            <a href="https://github.com/Noname424224" class="bg-paper px-6 py-4 hover:bg-rasp hover:text-paper transition text-center">GitHub</a>
+            <a href="tel:+79930124390" class="bg-paper text-ink px-6 py-4 hover:bg-rasp hover:text-paper transition text-center">+7&nbsp;993&nbsp;012-43-90</a>
+            <a href="https://t.me/noname067067" class="bg-paper text-ink px-6 py-4 hover:bg-rasp hover:text-paper transition text-center">Telegram</a>
+            <a href="https://github.com/Noname424224" class="bg-paper text-ink px-6 py-4 hover:bg-rasp hover:text-paper transition text-center">GitHub</a>
           </div>
         </div>
       </div>
@@ -259,10 +533,10 @@
 
   <footer class="relative z-10 border-t border-ink">
     <div class="max-w-5xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-sub">
-      <span>© <span id="year"></span> SEMA — Новосибирск</span>
+      <span>© <span id="year"></span> SVERSTAL — Новосибирск</span>
       <div class="flex flex-wrap justify-center gap-6">
         <a href="tel:+79930124390" class="hover:text-ink transition">+7&nbsp;993&nbsp;012-43-90</a>
-        <a href="mailto:pisarev.se2010@gmail.com" class="hover:text-ink transition">Email</a>
+        <span class="text-ink">pisarev.se2010@gmail.com</span>
         <a href="https://t.me/noname067067" class="hover:text-ink transition">Telegram</a>
         <a href="https://github.com/Noname424224" class="hover:text-ink transition">GitHub</a>
       </div>
@@ -271,7 +545,31 @@
   </footer>
 
   <script>
+    document.documentElement.classList.add('js');
     document.getElementById('year').textContent = new Date().getFullYear();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---- Раскладка букв в заголовке героя ---- */
+    document.querySelectorAll('.word-line').forEach(el => {
+      const text = el.dataset.text || '';
+      const frag = document.createDocumentFragment();
+      [...text].forEach(ch => {
+        const s = document.createElement('span');
+        s.className = 'letter';
+        s.textContent = ch === ' ' ? '\u00A0' : ch;
+        frag.appendChild(s);
+      });
+      el.appendChild(frag);
+    });
+
+    /* ---- Появление букв со стаггером + общий ---- */
+    const letters = document.querySelectorAll('.letter');
+    requestAnimationFrame(() => {
+      letters.forEach((l, i) => {
+        setTimeout(() => l.classList.add('in'), 200 + i * 28);
+      });
+    });
+
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
@@ -279,6 +577,71 @@
       el.style.transitionDelay = (i % 4) * 70 + 'ms';
       io.observe(el);
     });
+
+    /* ---- Магнитные кнопки ---- */
+    if (!reduce && window.matchMedia('(pointer:fine)').matches) {
+      document.querySelectorAll('.magnet').forEach(el => {
+        const inner = el.querySelector('span') || el;
+        el.addEventListener('pointermove', (e) => {
+          const r = el.getBoundingClientRect();
+          const x = (e.clientX - r.left - r.width / 2) * 0.25;
+          const y = (e.clientY - r.top - r.height / 2) * 0.4;
+          el.style.transform = `translate(${x}px, ${y}px)`;
+          inner.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+        });
+        el.addEventListener('pointerleave', () => {
+          el.style.transform = '';
+          inner.style.transform = '';
+        });
+      });
+    }
+
+    /* ---- Параллакс героя при скролле ---- */
+    if (!reduce) {
+      const h1 = document.querySelector('h1');
+      const heroSub = document.querySelector('main section:first-of-type .mt-10');
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        if (y < window.innerHeight) {
+          if (h1) h1.style.transform = `translateY(${y * 0.18}px)`;
+          if (heroSub) heroSub.style.transform = `translateY(${y * 0.08}px)`;
+        }
+      }, { passive: true });
+    }
+
+    /* ---- Переключатель тем (синхронизирует обе группы — десктоп и мобильную) ---- */
+    const THEMES = ['paper','night','mint','parchment'];
+    const applyTheme = (name) => {
+      THEMES.forEach(t => document.documentElement.classList.remove('theme-' + t));
+      if (name !== 'paper') document.documentElement.classList.add('theme-' + name);
+      document.querySelectorAll('.theme-dot').forEach(d => {
+        d.setAttribute('aria-pressed', d.dataset.themeName === name ? 'true' : 'false');
+      });
+      localStorage.setItem('sverstal-theme', name);
+    };
+    const savedTheme = localStorage.getItem('sverstal-theme') || 'paper';
+    applyTheme(THEMES.includes(savedTheme) ? savedTheme : 'paper');
+    document.querySelectorAll('.theme-dot').forEach(d => {
+      d.addEventListener('click', () => applyTheme(d.dataset.themeName));
+    });
+
+    /* ---- Бургер-меню ---- */
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = () => {
+      mobileMenu?.classList.add('hidden');
+      burger?.setAttribute('aria-expanded', 'false');
+      burger?.classList.remove('is-open');
+    };
+    const openMenu = () => {
+      mobileMenu?.classList.remove('hidden');
+      burger?.setAttribute('aria-expanded', 'true');
+      burger?.classList.add('is-open');
+    };
+    burger?.addEventListener('click', () => {
+      mobileMenu?.classList.contains('hidden') ? openMenu() : closeMenu();
+    });
+    mobileMenu?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   </script>
 </body>
 </html>
