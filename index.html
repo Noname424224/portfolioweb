@@ -19,7 +19,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -65,6 +65,8 @@
 
     .underline-grow { background-image: linear-gradient(#E11D54,#E11D54); background-size: 0% 1.5px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size .35s; }
     .underline-grow:hover { background-size: 100% 1.5px; }
+    /* Scrollspy: активный пункт меню */
+    .underline-grow.nav-active { background-size: 100% 1.5px; color: #E11D54; }
 
     .ticker { display: flex; width: max-content; animation: slide 40s linear infinite; }
     @keyframes slide { to { transform: translateX(-50%); } }
@@ -83,6 +85,12 @@
     .letter { display: inline-block; opacity: 0; transform: translateY(0.6em); transition: opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
     .letter.in { opacity: 1; transform: none; }
 
+    /* Изюминка: живой шрифтовой образец — буквы героя наливаются весом под курсором */
+    h1 .letter { font-variation-settings: 'opsz' 144, 'wght' 500; transition: opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1), font-variation-settings .18s ease; }
+
+    /* Печать медленно крутится при скролле */
+    #stamp { transition: none; will-change: transform; }
+
     /* Магнитные кнопки */
     .magnet { display: inline-block; transition: transform .35s cubic-bezier(.2,.7,.3,1); will-change: transform; }
     .magnet > * { display: inline-block; transition: transform .35s cubic-bezier(.2,.7,.3,1); }
@@ -90,8 +98,63 @@
     /* Параллакс героя */
     .hero-parallax { will-change: transform; }
 
+    /* ====== ПОЛОСА ПРОГРЕССА ЧТЕНИЯ ====== */
+    #progress {
+      position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+      background: #E11D54; z-index: 60; transition: width .1s linear;
+    }
+    html.theme-night #progress { background:#F25C7A; }
+    html.theme-mint  #progress { background:#C7456E; }
+    html.theme-parchment #progress { background:#B23A1F; }
+
+    /* ====== КОМАНДНАЯ ПАЛИТРА (⌘K / Ctrl+K) ====== */
+    #cmdk { position: fixed; inset: 0; z-index: 70; display: none; }
+    #cmdk.open { display: block; }
+    #cmdk .backdrop {
+      position: absolute; inset: 0; background: rgba(33,26,30,.45);
+      backdrop-filter: blur(3px); opacity: 0; transition: opacity .2s;
+    }
+    #cmdk.open .backdrop { opacity: 1; }
+    .cmdk-panel {
+      position: relative; max-width: 560px; margin: 12vh auto 0; background: #FBEDEF;
+      border: 1px solid #211A1E; box-shadow: 0 24px 70px rgba(33,26,30,.4);
+      transform: translateY(-10px) scale(.98); opacity: 0; transition: transform .22s cubic-bezier(.2,.7,.3,1), opacity .22s;
+    }
+    #cmdk.open .cmdk-panel { transform: none; opacity: 1; }
+    html.theme-night .cmdk-panel { background:#16151A; border-color:#F5EDE0; }
+    html.theme-mint  .cmdk-panel { background:#E8F2EA; border-color:#14322A; }
+    html.theme-parchment .cmdk-panel { background:#F2E9D8; border-color:#2B2418; }
+    .cmdk-input-wrap { display:flex; align-items:center; gap:10px; padding: 14px 16px; border-bottom: 1px solid rgba(33,26,30,.15); }
+    #cmdk-input {
+      flex: 1; background: transparent; border: none; outline: none;
+      font-family:'Space Mono', monospace; font-size: 14px; color: inherit;
+    }
+    .cmdk-hint { font-family:'Space Mono',monospace; font-size:10px; border:1px solid currentColor; opacity:.5; padding:1px 5px; }
+    .cmdk-list { max-height: 320px; overflow-y: auto; padding: 6px; }
+    .cmdk-item {
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 11px 12px; cursor: pointer; font-family:'Space Mono', monospace; font-size: 13px;
+      border: 1px solid transparent;
+    }
+    .cmdk-item .ci-left { display:flex; align-items:center; gap:11px; }
+    .cmdk-item .ci-ico { width:18px; text-align:center; color:#E11D54; }
+    .cmdk-item .ci-kind { font-size:10px; opacity:.45; text-transform:uppercase; letter-spacing:1px; }
+    .cmdk-item[aria-selected="true"] { background:#211A1E; color:#FBEDEF; }
+    .cmdk-item[aria-selected="true"] .ci-ico { color:#FBEDEF; }
+    html.theme-night .cmdk-item[aria-selected="true"] { background:#F5EDE0; color:#16151A; }
+    html.theme-night .cmdk-item[aria-selected="true"] .ci-ico { color:#16151A; }
+    html.theme-mint .cmdk-item[aria-selected="true"] { background:#14322A; color:#E8F2EA; }
+    html.theme-parchment .cmdk-item[aria-selected="true"] { background:#2B2418; color:#F2E9D8; }
+    .cmdk-empty { padding: 24px 16px; text-align:center; font-family:'Space Mono',monospace; font-size:12px; opacity:.5; }
+
+    /* Кнопка-подсказка ⌘K у навбара */
+    #cmdk-trigger { display:inline-flex; align-items:center; gap:6px; }
+    #cmdk-trigger kbd {
+      font-family:'Space Mono',monospace; font-size:10px; border:1px solid currentColor;
+      border-radius:3px; padding:1px 5px; opacity:.6;
+    }
+
     /* ====== ТЕМЫ ====== */
-    /* Базовая (paper) уже задана через Tailwind-конфиг. Остальные просто переопределяют через .theme-X на <html>. */
     html, body { transition: background-color .4s ease, color .4s ease; }
 
     /* --- NIGHT --- */
@@ -115,6 +178,7 @@
     html.theme-night ::-webkit-scrollbar-thumb { background:#2c2832; }
     html.theme-night ::-webkit-scrollbar-track { background:#1E1C22; }
     html.theme-night ::selection { background:#F25C7A; color:#16151A; }
+    html.theme-night .underline-grow.nav-active { color:#F25C7A; }
 
     /* --- MINT --- */
     html.theme-mint body { background:#E8F2EA; color:#14322A; }
@@ -136,6 +200,7 @@
     html.theme-mint ::-webkit-scrollbar-thumb { background:#b8d2bf; }
     html.theme-mint ::-webkit-scrollbar-track { background:#DCEBE0; }
     html.theme-mint ::selection { background:#C7456E; color:#E8F2EA; }
+    html.theme-mint .underline-grow.nav-active { color:#C7456E; }
 
     /* --- PARCHMENT --- */
     html.theme-parchment body { background:#F2E9D8; color:#2B2418; }
@@ -157,6 +222,12 @@
     html.theme-parchment ::-webkit-scrollbar-thumb { background:#d6c8a8; }
     html.theme-parchment ::-webkit-scrollbar-track { background:#EADFC8; }
     html.theme-parchment ::selection { background:#B23A1F; color:#F2E9D8; }
+    html.theme-parchment .underline-grow.nav-active { color:#B23A1F; }
+
+    /* Fix: в тёмных/цветных темах !important на .bg-paper глушил hover кнопок — возвращаем «перелив» */
+    html.theme-night a.bg-paper:hover, html.theme-night button.bg-paper:hover { background-color:#F25C7A !important; color:#16151A !important; }
+    html.theme-mint a.bg-paper:hover, html.theme-mint button.bg-paper:hover { background-color:#C7456E !important; color:#E8F2EA !important; }
+    html.theme-parchment a.bg-paper:hover, html.theme-parchment button.bg-paper:hover { background-color:#B23A1F !important; color:#F2E9D8 !important; }
 
     /* Принудительная видимость заголовков и описаний внутри карточек во всех тёмных темах */
     html.theme-night #pricing h3, html.theme-night #process h3 { color:#F5EDE0 !important; }
@@ -187,27 +258,65 @@
     /* Бургер → крестик */
     #burger.is-open .burger-bar:nth-child(1) { transform: translateY(3px) rotate(45deg); }
     #burger.is-open .burger-bar:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
+
+    /* Логотип-буквица S (чёрная с малиновым сдвигом) */
+    .logo-mark {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.75rem; height: 1.75rem; border-radius: 6px;
+      border: 1px solid rgba(33,26,30,.2);
+      font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; line-height: 1;
+      color: #211A1E; text-shadow: 1.5px 1.5px 0 #E11D54;
+    }
+    html.theme-night .logo-mark { color:#F5EDE0; text-shadow: 1.5px 1.5px 0 #F25C7A; }
+    html.theme-mint  .logo-mark { color:#14322A; text-shadow: 1.5px 1.5px 0 #C7456E; }
+    html.theme-parchment .logo-mark { color:#2B2418; text-shadow: 1.5px 1.5px 0 #B23A1F; }
+
+    /* FAQ-аккордеон (работает и без JS — на <details>) */
+    .faq-item summary { list-style: none; cursor: pointer; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item .faq-ico { transition: transform .3s cubic-bezier(.2,.7,.3,1); }
+    .faq-item[open] .faq-ico { transform: rotate(45deg); }
+    .faq-item[open] .faq-q { color: #E11D54; }
+    html.theme-night .faq-item[open] .faq-q { color:#F25C7A; }
+    html.theme-mint .faq-item[open] .faq-q { color:#C7456E; }
+    html.theme-parchment .faq-item[open] .faq-q { color:#B23A1F; }
+    .faq-item .faq-body { animation: faqIn .35s ease; }
+    @keyframes faqIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .faq-item .faq-body, .faq-item .faq-ico { animation: none; transition: none; } }
+
+    /* Тост-уведомление (копирование почты) */
+    #toast {
+      position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px);
+      background:#211A1E; color:#FBEDEF; font-family:'Space Mono',monospace; font-size:12px;
+      padding: 10px 16px; z-index: 80; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 
 <body class="bg-paper text-ink font-sans antialiased relative">
 
+  <div id="progress"></div>
   <div class="grain"></div>
 
   <header class="sticky top-0 z-50 bg-paper/90 backdrop-blur-[2px] border-b border-ink/15 nav-shell">
     <nav class="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
       <a href="#top" class="flex items-center gap-2.5 font-mono text-sm font-bold tracking-tight">
-        <img src="avatar.png" alt="" class="w-7 h-7 rounded-md border border-ink/20 object-cover" />
+        <span class="logo-mark" aria-hidden="true">S</span>
         SVERSTAL<span class="text-rasp">.</span>
       </a>
       <ul class="hidden md:flex items-center gap-7 font-mono text-xs">
-        <li><a href="#about" class="underline-grow">обо&nbsp;мне</a></li>
-        <li><a href="#work" class="underline-grow">работы</a></li>
-        <li><a href="#process" class="underline-grow">процесс</a></li>
-        <li><a href="#pricing" class="underline-grow">цены</a></li>
-        <li><a href="#contact" class="underline-grow">контакты</a></li>
+        <li><a href="#about" data-nav="about" class="underline-grow">обо&nbsp;мне</a></li>
+        <li><a href="#work" data-nav="work" class="underline-grow">работы</a></li>
+        <li><a href="#process" data-nav="process" class="underline-grow">процесс</a></li>
+        <li><a href="#pricing" data-nav="pricing" class="underline-grow">цены</a></li>
+        <li><a href="#faq" data-nav="faq" class="underline-grow">вопросы</a></li>
+        <li><a href="#contact" data-nav="contact" class="underline-grow">контакты</a></li>
       </ul>
       <div class="flex items-center gap-3 sm:gap-4">
+        <button id="cmdk-trigger" class="hidden lg:inline-flex font-mono text-[11px] text-sub border border-ink/20 px-2.5 py-1.5 hover:border-ink transition" aria-label="Открыть командную палитру">
+          <span>поиск</span><kbd>⌘K</kbd>
+        </button>
         <div id="theme-switcher" class="hidden md:flex items-center gap-2" role="group" aria-label="Темы">
           <button class="theme-dot" data-theme-name="paper"     title="Бумага"    aria-label="Тема: бумага"></button>
           <button class="theme-dot" data-theme-name="night"     title="Ночь"      aria-label="Тема: ночь"></button>
@@ -229,6 +338,7 @@
         <li><a href="#work"    class="block py-1">работы</a></li>
         <li><a href="#process" class="block py-1">процесс</a></li>
         <li><a href="#pricing" class="block py-1">цены</a></li>
+        <li><a href="#faq" class="block py-1">вопросы</a></li>
         <li><a href="#contact" class="block py-1">контакты</a></li>
       </ul>
       <div class="px-5 pb-5 pt-3 border-t border-ink/15 flex items-center justify-between">
@@ -254,19 +364,19 @@
 
       <h1 class="font-display font-medium leading-[0.95] tracking-tight text-[11vw] sm:text-7xl lg:text-8xl">
         <span class="word-line" data-text="Делаю сайты"></span><br>
-        <span class="word-line" data-text="и "></span><span class="italic text-rasp word-line" data-text="веб-приложения"></span><span class="word-line" data-text=" —"></span><br>
-        <span class="word-line" data-text="от идеи до "></span><span class="italic word-line" data-text="прода."></span>
+        <span class="word-line" data-text="и "></span><span class="italic text-rasp word-line" data-text="приложения"></span><span class="word-line" data-text=" —"></span><br>
+        <span class="word-line" data-text="от идеи до "></span><span class="italic word-line" data-text="запуска."></span>
       </h1>
 
       <div class="mt-8 sm:mt-10 grid sm:grid-cols-[1.3fr_1fr] gap-6 sm:gap-8 items-start">
         <p class="text-base sm:text-xl leading-relaxed max-w-xl">
-          Разработчик. Собираю проекты целиком — от первого коммита до прода. Веб на React и чистом
-          JavaScript, бэкенд на Firebase, деплой на Vercel. Делаю так, чтобы было быстро, аккуратно и понятно.
+          Делаю сайт под ключ — от идеи до момента, когда он работает в интернете. Беру на себя всё:
+          внешний вид, логику и публикацию. Чтобы было быстро, удобно и понятно вам и вашим клиентам.
         </p>
         <div class="font-mono text-xs text-sub space-y-2 sm:pt-2 sm:border-l sm:border-ink/15 sm:pl-6">
-          <div><span class="text-ink">→</span> сайты и веб-приложения</div>
-          <div><span class="text-ink">→</span> Firebase · базы · админки</div>
-          <div><span class="text-ink">→</span> Python · боты · автоматизация</div>
+          <div><span class="text-ink">→</span> сайты и интернет-магазины</div>
+          <div><span class="text-ink">→</span> личные кабинеты и админки</div>
+          <div><span class="text-ink">→</span> чат-боты и автоматизация</div>
         </div>
       </div>
 
@@ -280,76 +390,77 @@
     <div class="border-y border-ink overflow-hidden py-4 select-none">
       <div class="ticker font-display text-2xl sm:text-3xl">
         <span class="flex">
-          <em class="not-italic mx-6">JavaScript</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">React</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">Tailwind</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">Firebase</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">Python</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">Vercel</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Сайты</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Интернет-магазины</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Чат-боты</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Личные кабинеты</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Автоматизация</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Запуск под ключ</em><span class="text-rasp mx-2">·</span>
         </span>
         <span class="flex" aria-hidden="true">
-          <em class="not-italic mx-6">JavaScript</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">React</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">Tailwind</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">Firebase</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">Python</em><span class="text-rasp mx-2">·</span>
-          <em class="not-italic mx-6">Vercel</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Сайты</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Интернет-магазины</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Чат-боты</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Личные кабинеты</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Автоматизация</em><span class="text-rasp mx-2">·</span>
+          <em class="not-italic mx-6">Запуск под ключ</em><span class="text-rasp mx-2">·</span>
         </span>
       </div>
     </div>
 
     <!-- ABOUT -->
     <section id="about" class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-32">
-      <div class="grid md:grid-cols-12 gap-10">
+      <div class="reveal grid md:grid-cols-12 gap-10">
         <div class="md:col-span-5">
           <span class="font-mono text-xs text-sub">(02) обо мне</span>
           <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight mt-4 leading-[0.95]">Что я<br>пишу.</h2>
         </div>
         <div class="md:col-span-7 space-y-5 text-lg leading-relaxed">
-          <p>Довожу проекты до рабочего продукта в проде, а не до красивого макета.</p>
+          <p>Довожу проект до готового рабочего сайта, а не до красивой картинки.</p>
           <p class="text-sub text-base">
-            В вебе собираю интерфейсы на React и чистом JavaScript, верстаю на Tailwind, подключаю Firebase
-            для данных в реальном времени, авторизации и админ-панелей. Спокойно довожу проект до деплоя на Vercel.
+            Делаю удобные и быстрые сайты, которые одинаково хорошо смотрятся и на телефоне, и на компьютере.
+            Подключаю базы данных, вход по логину и панель управления — чтобы вы сами могли менять тексты, фото и цены.
+            Публикую сайт в интернете и помогаю с доменом.
           </p>
           <p class="text-sub text-base">
-            На Python делаю телеграм-ботов, автоматизацию и небольшие настольные приложения. Одинаково важны
-            и скорость, и то, насколько продуктом приятно пользоваться.
+            Ещё делаю чат-ботов в Telegram и автоматизирую рутину — то, что вы делаете руками каждый день,
+            может делать программа. Для меня одинаково важны и скорость, и то, насколько сайтом приятно пользоваться.
           </p>
           <p class="text-sub text-base">
-            Не боюсь новых задач и незнакомых инструментов — чем техничнее и интереснее задача, тем лучше.
+            Не боюсь новых задач — чем интереснее и необычнее проект, тем лучше.
           </p>
         </div>
       </div>
 
       <!-- Что умею -->
-      <div class="mt-16 border-t border-l border-ink grid sm:grid-cols-2 lg:grid-cols-4">
+      <div class="reveal mt-16 border-t border-l border-ink grid sm:grid-cols-2 lg:grid-cols-4">
         <div class="border-b border-r border-ink p-6">
-          <div class="font-mono text-xs text-rasp mb-2">/ интерфейсы</div>
-          <p class="text-sm leading-relaxed">React, чистый JavaScript, Tailwind, адаптивная вёрстка mobile-first.</p>
+          <div class="font-mono text-xs text-rasp mb-2">/ внешний вид</div>
+          <p class="text-sm leading-relaxed">Современные, удобные сайты, которые хорошо работают и на телефоне, и на компьютере.</p>
         </div>
         <div class="border-b border-r border-ink p-6">
-          <div class="font-mono text-xs text-rasp mb-2">/ бэкенд</div>
-          <p class="text-sm leading-relaxed">Firebase — данные в реальном времени, авторизация, админ-панели.</p>
+          <div class="font-mono text-xs text-rasp mb-2">/ данные и вход</div>
+          <p class="text-sm leading-relaxed">Регистрация и вход, базы данных, панель управления — чтобы вы сами меняли контент.</p>
         </div>
         <div class="border-b border-r border-ink p-6">
-          <div class="font-mono text-xs text-rasp mb-2">/ python</div>
-          <p class="text-sm leading-relaxed">Телеграм-боты, автоматизация, настольные приложения.</p>
+          <div class="font-mono text-xs text-rasp mb-2">/ боты</div>
+          <p class="text-sm leading-relaxed">Чат-боты в Telegram, автоматизация рутины, небольшие программы под задачу.</p>
         </div>
         <div class="border-b border-r border-ink p-6">
-          <div class="font-mono text-xs text-rasp mb-2">/ деплой</div>
-          <p class="text-sm leading-relaxed">Сборка и публикация проекта на Vercel — от кода до рабочей ссылки.</p>
+          <div class="font-mono text-xs text-rasp mb-2">/ запуск</div>
+          <p class="text-sm leading-relaxed">Публикую сайт в интернете и подключаю домен — от идеи до рабочей ссылки.</p>
         </div>
       </div>
     </section>
 
     <!-- WORK -->
     <section id="work" class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-32">
-      <div class="flex items-baseline justify-between mb-12">
+      <div class="reveal flex items-baseline justify-between mb-12">
         <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight">Работы</h2>
         <span class="font-mono text-xs text-sub">(03) кейсы</span>
       </div>
 
-      <div class="border-t border-ink">
+      <div class="reveal border-t border-ink">
 
         <!-- 01 СВЕТлица -->
         <article class="specimen group border-b border-ink relative overflow-hidden p-5 sm:p-10 grid sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-10 items-start cursor-default">
@@ -358,17 +469,15 @@
           <div class="relative z-10">
             <h3 class="font-display text-2xl sm:text-3xl font-medium mb-3">СВЕТлица — студия йоги и танца</h3>
             <p class="max-w-2xl leading-relaxed mb-5 text-[15px]">
-              Полноценный продуктовый сайт студии. Интерактивное расписание с записью на занятия и учётом свободных мест,
-              мультиаккаунтная админка для управления контентом, галерея и новости с загрузкой фото, карточки тренеров.
-              Данные синхронизируются в реальном времени через Firebase Firestore, оплата — через подключённого
-              телеграм-бота. Деплой на Vercel.
+              Полноценный сайт студии. Расписание с онлайн-записью на занятия и подсчётом свободных мест,
+              удобная панель управления, где сотрудники сами добавляют новости, фото и карточки тренеров.
+              Запись и оплата проходят через Telegram-бота, и всё на сайте обновляется сразу.
             </p>
             <div class="flex flex-wrap gap-2 font-mono text-[11px]">
-              <span class="tag border border-ink/25 px-2 py-0.5">Firebase</span>
-              <span class="tag border border-ink/25 px-2 py-0.5">Realtime</span>
-              <span class="tag border border-ink/25 px-2 py-0.5">Admin</span>
-              <span class="tag border border-ink/25 px-2 py-0.5">Telegram bot</span>
-              <span class="tag border border-ink/25 px-2 py-0.5">Vercel</span>
+              <span class="tag border border-ink/25 px-2 py-0.5">Онлайн-запись</span>
+              <span class="tag border border-ink/25 px-2 py-0.5">Панель управления</span>
+              <span class="tag border border-ink/25 px-2 py-0.5">Оплата в Telegram</span>
+              <span class="tag border border-ink/25 px-2 py-0.5">Мгновенные обновления</span>
             </div>
           </div>
           <div class="relative z-10 flex sm:flex-col gap-4 font-mono text-xs whitespace-nowrap">
@@ -389,12 +498,12 @@
     <!-- ПРОЦЕСС -->
     <section id="process" class="border-t border-ink">
       <div class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-32">
-        <div class="flex items-baseline justify-between mb-12">
+        <div class="reveal flex items-baseline justify-between mb-12">
           <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight">Как я работаю</h2>
           <span class="font-mono text-xs text-sub">(04) процесс</span>
         </div>
 
-        <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-ink border border-ink">
+        <ol class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-ink border border-ink">
           <li class="bg-paper p-7">
             <div class="font-mono text-xs text-rasp mb-3">шаг 01</div>
             <h3 class="font-display text-2xl font-medium mb-3">Бриф</h3>
@@ -408,12 +517,12 @@
           <li class="bg-paper p-7">
             <div class="font-mono text-xs text-rasp mb-3">шаг 03</div>
             <h3 class="font-display text-2xl font-medium mb-3">Доводка</h3>
-            <p class="text-sm leading-relaxed text-sub">Дизайн, адаптив, анимации, мелочи. Правки и обсуждение по ходу — не молчу до сдачи, держу в курсе.</p>
+            <p class="text-sm leading-relaxed text-sub">Дизайн, корректное отображение на телефоне, анимации, мелочи. Правки и обсуждение по ходу — держу в курсе, не пропадаю до сдачи.</p>
           </li>
           <li class="bg-paper p-7">
             <div class="font-mono text-xs text-rasp mb-3">шаг 04</div>
-            <h3 class="font-display text-2xl font-medium mb-3">Деплой</h3>
-            <p class="text-sm leading-relaxed text-sub">Публикую проект на Vercel, подключаю домен и аналитику. Передаю исходники и инструкции.</p>
+            <h3 class="font-display text-2xl font-medium mb-3">Запуск</h3>
+            <p class="text-sm leading-relaxed text-sub">Публикую сайт в интернете, подключаю домен и статистику посещений. Отдаю вам все файлы и инструкцию.</p>
           </li>
         </ol>
       </div>
@@ -422,14 +531,14 @@
     <!-- ТАРИФЫ -->
     <section id="pricing" class="border-t border-ink">
       <div class="max-w-5xl mx-auto px-6 py-24 sm:py-32 relative">
-        <div class="flex items-baseline justify-between mb-12">
+        <div class="reveal flex items-baseline justify-between mb-12">
           <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight">Сколько стоит</h2>
           <span class="font-mono text-xs text-sub">(05) тарифы</span>
         </div>
 
         <!-- Штамп -->
         <div class="hidden lg:block absolute right-10 top-32 rotate-[-14deg] pointer-events-none select-none">
-          <div class="relative w-44 h-44">
+          <div id="stamp" class="relative w-44 h-44">
             <svg viewBox="0 0 200 200" class="w-full h-full text-rasp/70">
               <defs>
                 <path id="stampCircle" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0"/>
@@ -453,20 +562,20 @@
         <div class="mb-10 border border-ink/20 p-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-3 font-mono text-[12px]">
           <div><span class="text-rasp">бриф —</span> <span class="text-sub">обсуждаем задачу, сроки, бюджет</span></div>
           <div><span class="text-rasp">прототип —</span> <span class="text-sub">первая рабочая версия, можно потрогать</span></div>
-          <div><span class="text-rasp">доводка —</span> <span class="text-sub">дизайн, адаптив, правки</span></div>
-          <div><span class="text-rasp">деплой —</span> <span class="text-sub">публикация и передача исходников</span></div>
+          <div><span class="text-rasp">доводка —</span> <span class="text-sub">дизайн, телефон, правки</span></div>
+          <div><span class="text-rasp">запуск —</span> <span class="text-sub">публикую сайт и отдаю все файлы</span></div>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-px bg-ink border border-ink">
+        <div class="reveal grid md:grid-cols-3 gap-px bg-ink border border-ink">
           <div class="bg-paper p-6 sm:p-8 flex flex-col">
             <div class="font-mono text-xs text-rasp mb-4">/ лендинг</div>
             <h3 class="font-display text-3xl font-medium mb-2">Сайт-визитка</h3>
-            <p class="text-sub text-sm leading-relaxed mb-6">Одностраничный сайт с описанием услуг, контактами и адаптивом. Быстрый старт, чистый код.</p>
+            <p class="text-sub text-sm leading-relaxed mb-6">Одна страница с описанием услуг, ценами и контактами. Хорошо открывается на телефоне, быстрый запуск.</p>
             <ul class="font-mono text-[13px] text-sub space-y-2 mb-6 flex-1">
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>бриф</span><span class="text-ink">½ дня</span></li>
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>прототип</span><span class="text-ink">½ дня</span></li>
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>доводка</span><span class="text-ink">1 день</span></li>
-              <li class="flex justify-between"><span>деплой</span><span class="text-ink">½ дня</span></li>
+              <li class="flex justify-between"><span>запуск</span><span class="text-ink">½ дня</span></li>
             </ul>
             <div class="font-display text-3xl mb-1">договорная</div>
             <div class="font-mono text-xs text-sub">ориентир: от 8&nbsp;000&nbsp;₽ · 2–3 дня</div>
@@ -476,12 +585,12 @@
             <span class="absolute top-4 right-4 font-mono text-[10px] bg-rasp text-paper px-2 py-1">популярное</span>
             <div class="font-mono text-xs text-rasp mb-4">/ многостраничный</div>
             <h3 class="font-display text-3xl font-medium mb-2">Сайт с формами</h3>
-            <p class="text-sub text-sm leading-relaxed mb-6">Несколько страниц, формы заявок, интеграции, базовая админка. Подходит для студий и малого бизнеса.</p>
+            <p class="text-sub text-sm leading-relaxed mb-6">Несколько страниц, формы заявок и простая панель управления. Подходит для студий и небольшого бизнеса.</p>
             <ul class="font-mono text-[13px] text-sub space-y-2 mb-6 flex-1">
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>бриф</span><span class="text-ink">1 день</span></li>
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>прототип</span><span class="text-ink">2 дня</span></li>
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>доводка</span><span class="text-ink">2–3 дня</span></li>
-              <li class="flex justify-between"><span>деплой</span><span class="text-ink">½ дня</span></li>
+              <li class="flex justify-between"><span>запуск</span><span class="text-ink">½ дня</span></li>
             </ul>
             <div class="font-display text-3xl mb-1">договорная</div>
             <div class="font-mono text-xs text-sub">ориентир: от 20&nbsp;000&nbsp;₽ · 5–7 дней</div>
@@ -490,12 +599,12 @@
           <div class="bg-paper p-6 sm:p-8 flex flex-col">
             <div class="font-mono text-xs text-rasp mb-4">/ приложение</div>
             <h3 class="font-display text-3xl font-medium mb-2">Веб-приложение</h3>
-            <p class="text-sub text-sm leading-relaxed mb-6">Полноценный продукт: база данных, авторизация, личный кабинет, админка. Как СВЕТлица.</p>
+            <p class="text-sub text-sm leading-relaxed mb-6">Полноценный сайт: вход по логину, личный кабинет, база данных и панель управления. Как у студии СВЕТлица.</p>
             <ul class="font-mono text-[13px] text-sub space-y-2 mb-6 flex-1">
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>бриф</span><span class="text-ink">1–2 дня</span></li>
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>прототип</span><span class="text-ink">3–4 дня</span></li>
               <li class="flex justify-between border-b border-ink/15 pb-2"><span>доводка</span><span class="text-ink">5–7 дней</span></li>
-              <li class="flex justify-between"><span>деплой</span><span class="text-ink">1 день</span></li>
+              <li class="flex justify-between"><span>запуск</span><span class="text-ink">1 день</span></li>
             </ul>
             <div class="font-display text-3xl mb-1">договорная</div>
             <div class="font-mono text-xs text-sub">ориентир: от 40&nbsp;000&nbsp;₽ · 10–14 дней</div>
@@ -509,11 +618,136 @@
       </div>
     </section>
 
+    <!-- ЧТО ВЫ ПОЛУЧИТЕ -->
+    <section id="result" class="border-t border-ink">
+      <div class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-32">
+        <div class="reveal flex items-baseline justify-between mb-12">
+          <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight">Что вы получите</h2>
+          <span class="font-mono text-xs text-sub">(06) итог</span>
+        </div>
+        <div class="reveal border-t border-l border-ink grid sm:grid-cols-2 lg:grid-cols-3">
+          <div class="border-b border-r border-ink p-6">
+            <div class="font-display text-2xl text-rasp mb-2">✓</div>
+            <h3 class="font-medium mb-1">Готовый сайт</h3>
+            <p class="text-sm leading-relaxed text-sub">Работает в интернете, открывается с телефона и компьютера.</p>
+          </div>
+          <div class="border-b border-r border-ink p-6">
+            <div class="font-display text-2xl text-rasp mb-2">✓</div>
+            <h3 class="font-medium mb-1">Свой адрес в сети</h3>
+            <p class="text-sm leading-relaxed text-sub">Подключаю домен — например, ваша-студия.ru — чтобы вас легко находили.</p>
+          </div>
+          <div class="border-b border-r border-ink p-6">
+            <div class="font-display text-2xl text-rasp mb-2">✓</div>
+            <h3 class="font-medium mb-1">Панель управления</h3>
+            <p class="text-sm leading-relaxed text-sub">Сами меняете тексты, фото и цены — без программиста и без оплаты за каждую правку.</p>
+          </div>
+          <div class="border-b border-r border-ink p-6">
+            <div class="font-display text-2xl text-rasp mb-2">✓</div>
+            <h3 class="font-medium mb-1">Все файлы — ваши</h3>
+            <p class="text-sm leading-relaxed text-sub">Сайт принадлежит вам и не привязан ко мне. Отдаю исходники и доступы.</p>
+          </div>
+          <div class="border-b border-r border-ink p-6">
+            <div class="font-display text-2xl text-rasp mb-2">✓</div>
+            <h3 class="font-medium mb-1">Понятная инструкция</h3>
+            <p class="text-sm leading-relaxed text-sub">Короткое руководство, как всё работает и как обновлять сайт самому.</p>
+          </div>
+          <div class="border-b border-r border-ink p-6">
+            <div class="font-display text-2xl text-rasp mb-2">✓</div>
+            <h3 class="font-medium mb-1">Я остаюсь на связи</h3>
+            <p class="text-sm leading-relaxed text-sub">Отвечаю на вопросы и помогаю уже после запуска, не пропадаю.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="border-t border-ink">
+      <div class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-32">
+        <div class="reveal flex items-baseline justify-between mb-12">
+          <h2 class="font-display text-3xl sm:text-6xl font-medium tracking-tight">Частые вопросы</h2>
+          <span class="font-mono text-xs text-sub">(07) вопросы</span>
+        </div>
+
+        <div class="reveal border-t border-ink">
+          <details class="faq-item border-b border-ink">
+            <summary class="flex items-center justify-between gap-4 py-5">
+              <span class="faq-q font-display text-xl sm:text-2xl font-medium">Сколько будет стоить мой сайт?</span>
+              <span class="faq-ico font-mono text-rasp text-xl shrink-0">+</span>
+            </summary>
+            <div class="faq-body pb-6 max-w-2xl text-[15px] leading-relaxed text-sub">
+              Точная сумма зависит от задачи — её называю после короткого обсуждения, бесплатно и без обязательств.
+              В разделе «Сколько стоит» есть ориентиры: визитка от 8&nbsp;000&nbsp;₽, сайт с формами от 20&nbsp;000&nbsp;₽,
+              большой сайт с личным кабинетом от 40&nbsp;000&nbsp;₽. Цену фиксируем заранее и письменно.
+            </div>
+          </details>
+
+          <details class="faq-item border-b border-ink">
+            <summary class="flex items-center justify-between gap-4 py-5">
+              <span class="faq-q font-display text-xl sm:text-2xl font-medium">Сколько времени это займёт?</span>
+              <span class="faq-ico font-mono text-rasp text-xl shrink-0">+</span>
+            </summary>
+            <div class="faq-body pb-6 max-w-2xl text-[15px] leading-relaxed text-sub">
+              Простой сайт-визитка — 2–3 дня. Сайт с формами и страницами — около недели. Большой сайт с личным
+              кабинетом — 2 недели. Сроки тоже обсуждаем заранее, и я держу вас в курсе на каждом этапе.
+            </div>
+          </details>
+
+          <details class="faq-item border-b border-ink">
+            <summary class="flex items-center justify-between gap-4 py-5">
+              <span class="faq-q font-display text-xl sm:text-2xl font-medium">Смогу ли я сам менять тексты и фото?</span>
+              <span class="faq-ico font-mono text-rasp text-xl shrink-0">+</span>
+            </summary>
+            <div class="faq-body pb-6 max-w-2xl text-[15px] leading-relaxed text-sub">
+              Да. Я делаю удобную панель управления, где вы сами добавляете новости, фото, цены и другой контент —
+              без знания техники и без обращения ко мне за каждой мелочью.
+            </div>
+          </details>
+
+          <details class="faq-item border-b border-ink">
+            <summary class="flex items-center justify-between gap-4 py-5">
+              <span class="faq-q font-display text-xl sm:text-2xl font-medium">Нужно ли мне разбираться в технике?</span>
+              <span class="faq-ico font-mono text-rasp text-xl shrink-0">+</span>
+            </summary>
+            <div class="faq-body pb-6 max-w-2xl text-[15px] leading-relaxed text-sub">
+              Нет. Всю техническую часть беру на себя и объясняю простыми словами. От вас — только рассказать,
+              что нужно и для кого. Остальное — моя забота.
+            </div>
+          </details>
+
+          <details class="faq-item border-b border-ink">
+            <summary class="flex items-center justify-between gap-4 py-5">
+              <span class="faq-q font-display text-xl sm:text-2xl font-medium">А если после запуска понадобятся правки?</span>
+              <span class="faq-ico font-mono text-rasp text-xl shrink-0">+</span>
+            </summary>
+            <div class="faq-body pb-6 max-w-2xl text-[15px] leading-relaxed text-sub">
+              Правки по ходу работы входят в стоимость. После запуска мелочи поправлю, а доработки и новые
+              возможности обсудим отдельно — я остаюсь на связи.
+            </div>
+          </details>
+
+          <details class="faq-item border-b border-ink">
+            <summary class="flex items-center justify-between gap-4 py-5">
+              <span class="faq-q font-display text-xl sm:text-2xl font-medium">Кому будет принадлежать сайт?</span>
+              <span class="faq-ico font-mono text-rasp text-xl shrink-0">+</span>
+            </summary>
+            <div class="faq-body pb-6 max-w-2xl text-[15px] leading-relaxed text-sub">
+              Вам. После запуска передаю все файлы и доступы — сайт ваш и ни к кому не привязан. Захотите
+              что-то менять с другим человеком — без проблем.
+            </div>
+          </details>
+        </div>
+
+        <p class="reveal mt-10 font-mono text-sm text-sub">
+          Не нашли свой вопрос? <a href="#contact" class="text-rasp underline underline-offset-4">Просто напишите мне →</a>
+        </p>
+      </div>
+    </section>
+
     <!-- CONTACT -->
     <section id="contact" class="border-t border-ink">
       <div class="max-w-5xl mx-auto px-5 sm:px-6 py-16 sm:py-36">
-        <div class="">
-          <span class="font-mono text-xs text-sub">(06) контакты</span>
+        <div class="reveal">
+          <span class="font-mono text-xs text-sub">(08) контакты</span>
           <h2 class="font-display text-4xl sm:text-8xl font-medium tracking-tight mt-4 mb-10 leading-[0.9]">
             Обсудим<br><span class="italic text-rasp">проект?</span>
           </h2>
@@ -544,6 +778,21 @@
     </div>
   </footer>
 
+  <!-- ====== КОМАНДНАЯ ПАЛИТРА ====== -->
+  <div id="cmdk" role="dialog" aria-modal="true" aria-label="Командная палитра">
+    <div class="backdrop" data-cmdk-close></div>
+    <div class="cmdk-panel">
+      <div class="cmdk-input-wrap">
+        <span class="text-rasp font-mono text-sm">⌘</span>
+        <input id="cmdk-input" type="text" placeholder="Куда перейти, что сделать…" autocomplete="off" spellcheck="false" />
+        <span class="cmdk-hint">esc</span>
+      </div>
+      <div class="cmdk-list" id="cmdk-list"></div>
+    </div>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
   <script>
     document.documentElement.classList.add('js');
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -556,13 +805,13 @@
       [...text].forEach(ch => {
         const s = document.createElement('span');
         s.className = 'letter';
-        s.textContent = ch === ' ' ? '\u00A0' : ch;
+        s.textContent = ch === ' ' ? ' ' : ch;
         frag.appendChild(s);
       });
       el.appendChild(frag);
     });
 
-    /* ---- Появление букв со стаггером + общий ---- */
+    /* ---- Появление букв со стаггером ---- */
     const letters = document.querySelectorAll('.letter');
     requestAnimationFrame(() => {
       letters.forEach((l, i) => {
@@ -570,13 +819,53 @@
       });
     });
 
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
-    document.querySelectorAll('.reveal').forEach((el, i) => {
-      el.style.transitionDelay = (i % 4) * 70 + 'ms';
-      io.observe(el);
-    });
+    /* ---- ИЗЮМИНКА: буквы героя реагируют на курсор (вариативный Fraunces) ---- */
+    if (!reduce && window.matchMedia('(pointer:fine)').matches) {
+      const heroH1 = document.querySelector('h1');
+      const heroLetters = [...heroH1.querySelectorAll('.letter')];
+      let lraf = null, lastE = null;
+      const paint = () => {
+        lraf = null;
+        if (!lastE) return;
+        for (const l of heroLetters) {
+          const r = l.getBoundingClientRect();
+          const dx = lastE.clientX - (r.left + r.width / 2);
+          const dy = lastE.clientY - (r.top + r.height / 2);
+          const t = Math.max(0, 1 - Math.hypot(dx, dy) / 240); // 0..1, радиус влияния
+          const w = Math.round(360 + t * 360);   // вес 360 → 720
+          const o = Math.round(9 + t * 135);      // оптический размер 9 → 144
+          l.style.fontVariationSettings = `'opsz' ${o}, 'wght' ${w}`;
+        }
+      };
+      heroH1.addEventListener('pointermove', (e) => {
+        lastE = e;
+        if (!lraf) lraf = requestAnimationFrame(paint);
+      });
+      heroH1.addEventListener('pointerleave', () => {
+        lastE = null;
+        heroLetters.forEach(l => l.style.fontVariationSettings = `'opsz' 144, 'wght' 500`);
+      });
+    }
+
+    /* ---- Reveal секций при скролле (теперь реально подключён) ---- */
+    const revealEls = [...document.querySelectorAll('.reveal')];
+    const showEl = (el) => el.classList.add('in');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { showEl(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+      revealEls.forEach((el, i) => {
+        el.style.transitionDelay = (i % 4) * 70 + 'ms';
+        // то, что уже в зоне видимости при загрузке, показываем сразу
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) { showEl(el); io.unobserve(el); }
+        else io.observe(el);
+      });
+      // Страховка: что бы ни случилось, через 1.2с показываем всё оставшееся
+      setTimeout(() => revealEls.forEach(showEl), 1200);
+    } else {
+      revealEls.forEach(showEl);
+    }
 
     /* ---- Магнитные кнопки ---- */
     if (!reduce && window.matchMedia('(pointer:fine)').matches) {
@@ -596,20 +885,47 @@
       });
     }
 
-    /* ---- Параллакс героя при скролле ---- */
-    if (!reduce) {
-      const h1 = document.querySelector('h1');
-      const heroSub = document.querySelector('main section:first-of-type .mt-10');
-      window.addEventListener('scroll', () => {
-        const y = window.scrollY;
-        if (y < window.innerHeight) {
-          if (h1) h1.style.transform = `translateY(${y * 0.18}px)`;
-          if (heroSub) heroSub.style.transform = `translateY(${y * 0.08}px)`;
-        }
-      }, { passive: true });
-    }
+    /* ---- Параллакс героя + полоса прогресса (через rAF, без дёрганья) ---- */
+    const h1 = document.querySelector('h1');
+    const heroSub = document.querySelector('main section:first-of-type .mt-10');
+    const progress = document.getElementById('progress');
+    const stamp = document.getElementById('stamp');
+    let ticking = false;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (!reduce && y < window.innerHeight) {
+        if (h1) h1.style.transform = `translateY(${y * 0.18}px)`;
+        if (heroSub) heroSub.style.transform = `translateY(${y * 0.08}px)`;
+      }
+      if (!reduce && stamp) {
+        const sr = stamp.getBoundingClientRect();
+        const prog = (window.innerHeight - sr.top) / (window.innerHeight + sr.height); // ~0..1, пока штамп идёт по экрану
+        stamp.style.transform = `rotate(${(Math.min(1, Math.max(0, prog)) - 0.5) * 24}deg)`; // мягко: -12°..+12°
+      }
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+    }, { passive: true });
+    onScroll();
 
-    /* ---- Переключатель тем (синхронизирует обе группы — десктоп и мобильную) ---- */
+    /* ---- Scrollspy: подсветка активного пункта меню ---- */
+    const navLinks = [...document.querySelectorAll('a[data-nav]')];
+    const sectionMap = navLinks.map(a => ({ link: a, sec: document.getElementById(a.dataset.nav) })).filter(o => o.sec);
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('nav-active'));
+          const match = sectionMap.find(o => o.sec === e.target);
+          if (match) match.link.classList.add('nav-active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sectionMap.forEach(o => spy.observe(o.sec));
+
+    /* ---- Переключатель тем ---- */
     const THEMES = ['paper','night','mint','parchment'];
     const applyTheme = (name) => {
       THEMES.forEach(t => document.documentElement.classList.remove('theme-' + t));
@@ -642,6 +958,111 @@
       mobileMenu?.classList.contains('hidden') ? openMenu() : closeMenu();
     });
     mobileMenu?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+    /* ---- Тост ---- */
+    const toast = document.getElementById('toast');
+    let toastTimer;
+    const showToast = (msg) => {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+    };
+
+    /* ====== КОМАНДНАЯ ПАЛИТРА ====== */
+    const cmdk = document.getElementById('cmdk');
+    const cmdkInput = document.getElementById('cmdk-input');
+    const cmdkList = document.getElementById('cmdk-list');
+
+    const COMMANDS = [
+      { ico:'→', kind:'переход', label:'Обо мне',   run:() => goto('#about') },
+      { ico:'→', kind:'переход', label:'Работы',    run:() => goto('#work') },
+      { ico:'→', kind:'переход', label:'Процесс',   run:() => goto('#process') },
+      { ico:'→', kind:'переход', label:'Цены',      run:() => goto('#pricing') },
+      { ico:'→', kind:'переход', label:'Что вы получите', run:() => goto('#result') },
+      { ico:'→', kind:'переход', label:'Частые вопросы',  run:() => goto('#faq') },
+      { ico:'→', kind:'переход', label:'Контакты',  run:() => goto('#contact') },
+      { ico:'◐', kind:'тема', label:'Тема: Бумага',    run:() => applyTheme('paper') },
+      { ico:'◐', kind:'тема', label:'Тема: Ночь',      run:() => applyTheme('night') },
+      { ico:'◐', kind:'тема', label:'Тема: Мята',      run:() => applyTheme('mint') },
+      { ico:'◐', kind:'тема', label:'Тема: Пергамент', run:() => applyTheme('parchment') },
+      { ico:'⎘', kind:'действие', label:'Скопировать почту', run:() => copyEmail() },
+      { ico:'✦', kind:'ссылка', label:'GitHub',   run:() => window.open('https://github.com/Noname424224','_blank') },
+      { ico:'✦', kind:'ссылка', label:'Telegram', run:() => window.open('https://t.me/noname067067','_blank') },
+      { ico:'☎', kind:'ссылка', label:'Позвонить', run:() => location.href = 'tel:+79930124390' },
+    ];
+
+    function goto(hash){ document.querySelector(hash)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }
+    function copyEmail(){
+      const mail = 'pisarev.se2010@gmail.com';
+      navigator.clipboard?.writeText(mail).then(
+        () => showToast('Почта скопирована ✓'),
+        () => showToast(mail)
+      );
+    }
+
+    let activeIdx = 0;
+    let filtered = COMMANDS.slice();
+
+    function renderCmdk(){
+      cmdkList.innerHTML = '';
+      if (!filtered.length){
+        cmdkList.innerHTML = '<div class="cmdk-empty">ничего не найдено</div>';
+        return;
+      }
+      filtered.forEach((c, i) => {
+        const item = document.createElement('div');
+        item.className = 'cmdk-item';
+        item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', i === activeIdx ? 'true' : 'false');
+        item.innerHTML = `<span class="ci-left"><span class="ci-ico">${c.ico}</span><span>${c.label}</span></span><span class="ci-kind">${c.kind}</span>`;
+        item.addEventListener('mousemove', () => { activeIdx = i; updateSel(); });
+        item.addEventListener('click', () => execActive(i));
+        cmdkList.appendChild(item);
+      });
+    }
+    function updateSel(){
+      [...cmdkList.children].forEach((el, i) => el.setAttribute && el.setAttribute('aria-selected', i === activeIdx ? 'true' : 'false'));
+      const el = cmdkList.children[activeIdx];
+      el?.scrollIntoView({ block: 'nearest' });
+    }
+    function execActive(i){
+      const cmd = filtered[i ?? activeIdx];
+      if (cmd){ closeCmdk(); cmd.run(); }
+    }
+    function filterCmdk(q){
+      q = q.trim().toLowerCase();
+      filtered = q ? COMMANDS.filter(c => (c.label + ' ' + c.kind).toLowerCase().includes(q)) : COMMANDS.slice();
+      activeIdx = 0;
+      renderCmdk();
+    }
+    function openCmdk(){
+      cmdk.classList.add('open');
+      cmdkInput.value = '';
+      filterCmdk('');
+      setTimeout(() => cmdkInput.focus(), 30);
+    }
+    function closeCmdk(){
+      cmdk.classList.remove('open');
+    }
+
+    document.getElementById('cmdk-trigger')?.addEventListener('click', openCmdk);
+    cmdk.querySelector('[data-cmdk-close]')?.addEventListener('click', closeCmdk);
+    cmdkInput.addEventListener('input', () => filterCmdk(cmdkInput.value));
+
+    document.addEventListener('keydown', (e) => {
+      const isOpen = cmdk.classList.contains('open');
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){
+        e.preventDefault();
+        isOpen ? closeCmdk() : openCmdk();
+        return;
+      }
+      if (!isOpen) return;
+      if (e.key === 'Escape'){ e.preventDefault(); closeCmdk(); }
+      else if (e.key === 'ArrowDown'){ e.preventDefault(); activeIdx = Math.min(activeIdx + 1, filtered.length - 1); updateSel(); }
+      else if (e.key === 'ArrowUp'){ e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); updateSel(); }
+      else if (e.key === 'Enter'){ e.preventDefault(); execActive(); }
+    });
   </script>
 </body>
 </html>
